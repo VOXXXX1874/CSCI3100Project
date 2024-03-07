@@ -1,4 +1,4 @@
-### Introduction
+# Introduction
 There is an introduction of frontend file structure to help you know where your work should begin.
 
 ### node_modules

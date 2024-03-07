@@ -1,38 +1,24 @@
 import './App.css';
-import {Component} from 'react';
 import {AuthContext} from './components/authentication/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import {useEffect,useState} from 'react';
 
-class App extends Component{
-  static contextType = AuthContext
-  constructor(props){
-    super(props);
-    this.state = {apiResponse:""};
-  }
-
-  callAPI(){
+export default function App(){
+  const contextType = AuthContext;
+  const [apiResponse,setResponse] = useState("");
+  useEffect(() => {
     fetch("http://localhost:9000/testAPI")
         .then(res => res.text())
-        .then(res => this.setState({apiResponse:res}))
+        .then(res => setResponse(res))
         .catch(err => err);
-  }
+  },[])
 
-  componentDidMount(){
-    this.callAPI();
-  }
-
-  render(){
-    const isLoggedIn = this.context
-    return (
-      <div className="App">
-        {isLoggedIn ? <Login/>:<Home/>}
-        <p className="App-test">{this.state.apiResponse}</p>
-      </div>
-    );
-  }
+  const isLoggedIn = contextType
+  return (
+    <div className="App">
+      {isLoggedIn ? <Login/>:<Home/>}
+      <p className="App-test">{apiResponse}</p>
+    </div>
+  );
 }
-
-
-
-export default App;
