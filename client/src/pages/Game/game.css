@@ -1,0 +1,40 @@
+.game {
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items: center;
+    height: 70vh;
+}
+
+.status {
+    margin-right: 65px;
+}
+
+.square{
+    background: rgba(255,255,255,0);
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    width: 34px;
+    text-align: center;
+}
+
+.board-row:after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+.game-board{
+    flex: 0 0 auto;
+    background-image:url('./chessboard.jpeg');
+    background-repeat: no-repeat;
+    background-size: 477px 477px;
+}
+
+.game-info {
+    margin-left: 20px;
+}

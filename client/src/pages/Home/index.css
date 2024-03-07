@@ -1,0 +1,14 @@
+.HomePage{
+    text-align:center;
+}
+
+.ButtonsContainer{
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+}
+
+.PageButton{
+    margin-bottom:10px;
+}
