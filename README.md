@@ -24,12 +24,16 @@ npm start
 After the backend server starts, refresh the http://localhost:3000 page. If you can find "API works properly" appear under the head, then you successfully setup backend server too. What's more, you can also open url http://localhost:9000, where the backend runs. If you can see some message about Express, then you successfully setup backed server.
 
 ### TO DO
-Change the css from flex to grid since the components in one page will not change frequently. The first stable naive version.
+Vox: Connect backend with database and realize the real login.
 
 ### History
-3/7: Initialize the backend and frontend
-3/7: Change every component to pure function
+3/7: Initialize the backend and frontend.
+
+3/7: Change every component to pure function.
+
 3/8: Build basic four main pages and the way to switch from page to page. Build a simple chessboard adapted from the React tic-tac-toe tutorial.
+
+3/20: Change the css layout from flex to grid so that the components will not move when the components change. Make the chessboard more appealing and natural.
 
 ### Documents
 All the documents such as high-level design, data flow diagram of this project is placed in folder "Documents"

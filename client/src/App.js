@@ -15,7 +15,7 @@ const PagesMap = {
 
 export default function App(){
   const {page} = useContext(PageContext);
-  const [apiResponse,setResponse] = useState("");// should i remove this state?
+  const [apiResponse,setResponse] = useState("");
   useEffect(() => {
     fetch("http://localhost:9000/testAPI")
         .then(res => res.text())

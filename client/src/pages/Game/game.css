@@ -1,25 +1,56 @@
 .game {
-    display: flex;
-    flex-direction: row;
-    justify-content:center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1.25fr 1.5fr 1fr;
     height: 70vh;
+    background-image:url('./chessboard.jpeg');
+    background-repeat: no-repeat;
+    background-size: 478px 478px;
+    background-position-x: 510px;
+    background-position-y: 15px;
 }
 
 .status {
+    grid-column:1;
     margin-right: 65px;
+    margin-top: 210px;
+}
+
+.square.X{
+    background-image: url('./blackstone.png');
+    background-size: 33px 33px;
+    background-repeat: no-repeat;
+}
+
+.square.O{
+    background-image: url('./whitestone.png');
+    background-size: 33px 33px;
+    background-repeat: no-repeat;
 }
 
 .square{
     background: rgba(255,255,255,0);
-    border: 1px solid #999;
+    border: 0px;
     float: left;
     font-size: 24px;
     font-weight: bold;
     line-height: 34px;
-    height: 34px;
-    width: 34px;
+    height: 33.6px;
+    width: 33.8px;
     text-align: center;
+}
+
+.square.hovered.HX{
+    background-image: url('./blackstone.png');
+    background-size: 33px 33px;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+}
+
+.square.hovered.HO{
+    background-image: url('./whitestone.png');
+    background-size: 33px 33px;
+    background-repeat: no-repeat;
+    opacity: 0.5;
 }
 
 .board-row:after {
@@ -29,12 +60,10 @@
 }
 
 .game-board{
-    flex: 0 0 auto;
-    background-image:url('./chessboard.jpeg');
-    background-repeat: no-repeat;
-    background-size: 477px 477px;
+    grid-column:2;
 }
 
 .game-info {
-    margin-left: 20px;
+    grid-column:3;
+    margin-right: 250px;
 }
