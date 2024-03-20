@@ -35,6 +35,8 @@ Vox: Connect backend with database and realize the real login.
 
 3/20: Change the css layout from flex to grid so that the components will not move when the components change. Make the chessboard more appealing and natural.
 
+3/21：Fix the length of grid column so that the window size will not affect chessboard. Make the history scrollable component to prevent the page become scrollable.
+
 ### Documents
 All the documents such as high-level design, data flow diagram of this project is placed in folder "Documents"
 
