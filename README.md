@@ -31,6 +31,7 @@ After the backend server starts, refresh the http://localhost:3000 page. If you 
 
 ### TO DO
 Vox: Prepare all the required dbController.
+...
 
 ### History
 3/7: Initialize the backend and frontend.
