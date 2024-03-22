@@ -4,6 +4,7 @@ import "./index.css"
 
 export default function HomePage(){
     const {logout, startGame, modifySettings} = useContext(PageContext);
+    // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
     function handleStartGame(){
         startGame();
     }

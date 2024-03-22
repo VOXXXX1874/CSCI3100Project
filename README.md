@@ -33,15 +33,17 @@ After the backend server starts, refresh the http://localhost:3000 page. If you 
 Vox: Prepare all the required dbController.
 
 ### History
-3/7: Initialize the backend and frontend.
+3/7: Vox: Initialize the backend and frontend.
 
-3/7: Change every component to pure function.
+3/7: Vox: Change every component to pure function.
 
-3/8: Build basic four main pages and the way to switch from page to page. Build a simple chessboard adapted from the React tic-tac-toe tutorial.
+3/8: Vox: Build basic four main pages and the way to switch from page to page. Build a simple chessboard adapted from the React tic-tac-toe tutorial.
 
-3/20: Change the css layout from flex to grid so that the components will not move when the components change. Make the chessboard more appealing and natural.
+3/20: Vox: Change the css layout from flex to grid so that the components will not move when the components change. Make the chessboard more appealing and natural.
 
-3/21：Fix the length of grid column so that the window size will not affect chessboard. Make the history scrollable component to prevent the page become scrollable.
+3/21：Vox: Fix the length of grid column so that the window size will not affect chessboard. Make the history scrollable component to prevent the page become scrollable.
+
+3/22: Add some comments to the frontend and backend codes I wrote. Change the backend to MVC structure (omit V since we have backend).
 
 ### Documents
 All the documents such as high-level design, data flow diagram of this project is placed in folder "Documents"

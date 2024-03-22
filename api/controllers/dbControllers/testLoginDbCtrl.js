@@ -11,6 +11,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 })
 
+// Since I will handle all the database part, I will not write comment on it.
 async function getTestUserInformation(){
     return new Promise((resolve,reject) => {
         pool.getConnection((err,connection)=>{

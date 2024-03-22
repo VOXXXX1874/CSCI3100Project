@@ -3,25 +3,28 @@ import "./index.css"
 import {PageContext} from '../../components/appPage/pageContext';
 
 export default function LoginPage(){
-    const {login} = useContext(PageContext); // Get the login function provided by PageContext. It will change page state from 0 to 1:HomePage
-    const [username,setUsername] = useState(""); // Username
-    const [password,setPassword] = useState(""); // Password
-    const [defaultAccount,setDefaultAccount] = useState(""); // Default account for test
+    const {login} = useContext(PageContext); // Get the login function provided by PageContext. It will change page context from 0 to 1:HomePage
+    const [username,setUsername] = useState(""); // state(you can treat it as static variable) of Username
+    const [password,setPassword] = useState(""); // state(you can treat it as static variable) of Password
+    const [defaultAccount,setDefaultAccount] = useState(""); // Default account for testing
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        // Vox: I'm going to add the basic login here for testing
+        event.preventDefault(); 
         console.log('Username:',username);
         console.log('Password:',password);
         login();
     }
 
     useEffect(()=>{
+        // Same as testAPI, fetch the default username and password from backend.
         fetch("http://localhost:9000/testLogin")
             .then(res => res.text())
             .then(res => setDefaultAccount(res))
             .catch(err => err)
     },[]);
 
+    // A form of login
     return(
         <div className="loginContainer">
             <h2>You will see the account if the backend and database is set up and started properly</h2>

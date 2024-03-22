@@ -1,7 +1,9 @@
 import React,{createContext,useState} from 'react';
 
+// Create the page context
 const PageContext = createContext();
 
+// Provide the page context and related functions for other component
 const PageProvider = ({children}) => {
     const [page,setPage] = useState(0);
 

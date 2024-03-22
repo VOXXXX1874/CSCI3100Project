@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import './game.css'
 
+// Please refer to the React Tic Tac Toe tutorial. I might write some comment later.
+
 function Square({value,onSquareClick,xIsNext}){
   const [isHovered,setIsHovered] = useState(false);
 
