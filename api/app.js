@@ -4,20 +4,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// ***
+// allow cross region
 var cors=require("cors")
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// ***
+// The router to test whether the API works
 var testAPIRouter = require("./routes/testAPI")
+// The router to send default username and password
+var testLoginRouter = require("./routes/testLogin")
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// ***
+// allow cross region
 app.use(cors())
 
 app.use(logger('dev'));
@@ -29,8 +31,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// ***
-app.use("/testAPI",testAPIRouter)
+// Use the test API router
+app.use("/testAPI",testAPIRouter);
+// Use the test login router
+app.use("/testLogin",testLoginRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

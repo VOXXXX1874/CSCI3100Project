@@ -1,4 +1,10 @@
 # CSCI3100Project
+## !!!Anouncement for both frontend and backend!!!
+To make the frontend, backend, and database more separated from each other and development of each part easier, I propose the following interface for interation between each part:
+1. For the communication between frontend and backend, please send http request to specified url (maybe we can specify it in next meeting). For example, for Login, frontend might send http post request to url http://localhost:9000/Login and wait for response from backend. You can refer to current code in frontend Login as a naive example. The detail of request and response will be specified later.
+2. For the arrangement of backend, there are some changes so that now it is a little different from the description I made on zoom. Besides routes, there is one more folder called controller.![alt text](image-1.png) As shown in this diagram (omit the Views), routers under the routes folder do not process the request, but direct the request to appropriate controller. The controllers process the request and send response. A naive example is the testLogin.js under routes folder and testLoginCtrl.js under controllers folder.
+3. For communication between backend and database, I create a dbControllers folder under controllers folder. In that folder, I will provide all required functions of database read/write for features like Login and Replay. You can refer to the interaction between testLogin.js,testLoginCtrl.js, and testLoginDbCtrl.js as an example. More detail will be specified in later meeting.
+
 ### Introduction
 This is our CSCI3100 project Gobang. This project use React as frontend framework and Express as backend framework. Frontend and backend are seperated and placed in folder "client" and "api" respectively.
 
@@ -24,7 +30,7 @@ npm start
 After the backend server starts, refresh the http://localhost:3000 page. If you can find "API works properly" appear under the head, then you successfully setup backend server too. What's more, you can also open url http://localhost:9000, where the backend runs. If you can see some message about Express, then you successfully setup backed server.
 
 ### TO DO
-Vox: Connect backend with database and realize the real login.
+Vox: Prepare all the required dbController.
 
 ### History
 3/7: Initialize the backend and frontend.

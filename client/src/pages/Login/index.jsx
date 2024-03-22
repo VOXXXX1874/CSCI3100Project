@@ -1,22 +1,30 @@
-import React,{useState,useContext} from 'react';
+import React,{useState,useContext,useEffect} from 'react';
 import "./index.css"
 import {PageContext} from '../../components/appPage/pageContext';
 
 export default function LoginPage(){
-    const {login} = useContext(PageContext);
-    const [username,setUsername] = useState("");
-    const [password,setPassword] = useState("");
+    const {login} = useContext(PageContext); // Get the login function provided by PageContext. It will change page state from 0 to 1:HomePage
+    const [username,setUsername] = useState(""); // Username
+    const [password,setPassword] = useState(""); // Password
+    const [defaultAccount,setDefaultAccount] = useState(""); // Default account for test
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // TO DO: Pass the loginInfo to the backend and wait for response
         console.log('Username:',username);
         console.log('Password:',password);
         login();
     }
+
+    useEffect(()=>{
+        fetch("http://localhost:9000/testLogin")
+            .then(res => res.text())
+            .then(res => setDefaultAccount(res))
+            .catch(err => err)
+    },[]);
+
     return(
         <div className="loginContainer">
-            <h2>Entering any username and password to login</h2>
+            <h2>You will see the account if the backend and database is set up and started properly</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Username<input
@@ -37,6 +45,7 @@ export default function LoginPage(){
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <p className="defaultAccount">{defaultAccount}</p>
         </div>
     );
 }

@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import {PageProvider} from './components/appPage/pageContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// Please refer to ./components/appPage/pageContext.js for detail of <PageProvider>. It provides the page state and functions for change state.
+// <App/> contains everything of our application
 root.render(
     <React.StrictMode>
       <PageProvider>
