@@ -8,11 +8,28 @@ export default function LoginPage(){
     const [password,setPassword] = useState(""); // state(you can treat it as static variable) of Password
     const [defaultAccount,setDefaultAccount] = useState(""); // Default account for testing
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         // Vox: I'm going to add the basic login here for testing
-        event.preventDefault(); 
+        event.preventDefault();
         console.log('Username:',username);
         console.log('Password:',password);
+        try{
+            const response = await fetch('http://localhost:9000/Login',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username:username,
+                    password:password,
+                }),
+            });
+            if (response.status === 200){
+                alert('Login Success');
+            }
+        }catch(error){
+            console.error('Error:',error);
+        }
         login();
     }
 
