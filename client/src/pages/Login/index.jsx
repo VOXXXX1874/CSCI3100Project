@@ -8,7 +8,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
 
     const handleSubmit = (event) => {
-//
         event.preventDefault();
         console.log('Username:', username);
         console.log('Password:', password);
@@ -18,7 +17,8 @@ export default function LoginPage() {
     return (
         <div className="loginContainer">
             <h1>Sign in</h1>
-            <p className="signUpText">New user? <a href="#">Create an account</a></p>
+            <p className="signUpText">New user? <a href="">Create an account</a></p>
+
             <form onSubmit={handleSubmit} className="loginForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>
@@ -39,9 +39,7 @@ export default function LoginPage() {
                     />
                 </div>
                 <button type="submit" className="loginButton">SIGN IN</button>
-                <p className="signUpText">New user? <a href="#">Create an account</a></p>
             </form>
         </div>
     );
 }
-

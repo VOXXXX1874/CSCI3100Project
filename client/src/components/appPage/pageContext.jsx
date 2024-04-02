@@ -22,9 +22,15 @@ const PageProvider = ({children}) => {
     function modifySettings(){
       setPage(3);
     }
+    function pastGame(){
+      setPage(4);
+    }
+    function leaderBoard(){
+      setPage(5);
+    }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard }}>  
           {children}  
         </PageContext.Provider>  
       );  

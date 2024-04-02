@@ -1,11 +1,31 @@
-.ButtonsContainer{
-    display:grid;
-    row-gap:10px;
-    place-items: center;
-}
-
-.PageButton{
-    width:300px;
-    padding: 10px 24px;
-    /*margin-bottom:10px;*/
-}
+.ButtonsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center; /* Center align the buttons */
+    gap: 20px;
+  }
+  
+  .PageButton {
+    width: 350px;
+    height: 320px;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    border: 2px solid black;
+  }
+  
+  .ButtonContent {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .ButtonText {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    padding: 10px 0;
+  }
+  

@@ -4,6 +4,8 @@ import LoginPage from './pages/Login';
 import GamePage from './pages/Game';
 import SettingsPage from './pages/Settings';
 import {useEffect,useContext,useState} from 'react';
+import PastGamesPage from './pages/PastGames';
+import LeaderBoardPage from './pages/LeaderBoard';
 import "./App.css"
 
 // Map different page context to different pages so that the application knows which page to show.
@@ -12,6 +14,8 @@ const PagesMap = {
   1:<HomePage/>,
   2:<GamePage/>,
   3:<SettingsPage/>,
+  4:<PastGamesPage/>,
+  5:<LeaderBoardPage/>,
 }
 
 export default function App(){
@@ -29,9 +33,9 @@ export default function App(){
   },[]);
   // Return the corresponding page of page context, which by default is 0:LoginPage, and response of backend
   return(
-    <div className="App">
-      {PagesMap[page] || PagesMap[0]}
-      <p className="ApiTest">{apiResponse}</p>
-    </div>
+      <div className="App">
+        {PagesMap[page] || PagesMap[0]}
+        <p className="ApiTest">{apiResponse}</p>
+      </div>
   );
 }
