@@ -1,4 +1,4 @@
-.loginContainer {
+.creatAccountContainer {
     width: 100%;
     height: 100%;
     max-width: 320px;
@@ -15,7 +15,7 @@ h1 {
     margin-bottom: 40px;
 }
 
-.loginForm {
+.createAccountForm {
     display: flex;
     flex-direction: column; 
 }
@@ -38,7 +38,7 @@ input {
     box-sizing: border-box;
 }
 
-.loginButton {
+.createAccountButton {
     background-color: #007bff;
     color: white;
     padding: 10px 15px;
