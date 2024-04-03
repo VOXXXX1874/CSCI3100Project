@@ -5,6 +5,8 @@ import startGameImage from './startGame.png';
 import leaderBoardImage from './leaderBoard.png';
 import Sidebar from '../../components/Sidebar';
 import {Container, Col, Row } from 'react-bootstrap'; 
+import { ContactsProvider } from '../../contexts/ContactsProvider';
+import { ConversationsProvider } from '../../contexts/ConversationsProvider';
 
 export default function HomePage(){
     const {logout, startGame, modifySettings, pastGame, leaderBoard } = useContext(PageContext);
@@ -35,9 +37,13 @@ export default function HomePage(){
         <Container>
           <Row>
             <Col>
-              <div className="PageChat">
-                <Sidebar/>
-              </div>
+              <ContactsProvider>
+                <ConversationsProvider>
+                  <div className="PageChat">
+                    <Sidebar/>
+                  </div>
+                </ConversationsProvider>
+              </ContactsProvider>
             </Col>
             <Col>
                 <div className="ButtonsContainer">
