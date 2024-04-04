@@ -6,7 +6,9 @@ import leaderBoardImage from './leaderBoard.png';
 import Sidebar from '../../components/Sidebar';
 import {Container, Col, Row } from 'react-bootstrap'; 
 import { ContactsProvider } from '../../contexts/ContactsProvider';
-import { ConversationsProvider } from '../../contexts/ConversationsProvider';
+import { ConversationsProvider, useConversations } from '../../contexts/ConversationsProvider';
+import OpenConversation from '../../components/OpenConversation';
+import { SocketProvider } from '../../contexts/SocketProvider'
 
 export default function HomePage(){
     const {logout, startGame, modifySettings, pastGame, leaderBoard } = useContext(PageContext);
@@ -31,20 +33,26 @@ export default function HomePage(){
         leaderBoard();
     }
 
+    // TODO: Pass acutal ID into ConversationsProvider
     return(
         <div className="HomePage">
             <h2>This is Home page</h2>
         <Container>
           <Row>
-            <Col>
+            <SocketProvider id={"TEST"}>
               <ContactsProvider>
-                <ConversationsProvider>
-                  <div className="PageChat">
-                    <Sidebar/>
-                  </div>
+                <ConversationsProvider id={"TEST"}> 
+                  <Col>
+                    <div className="PageChat">
+                      <Sidebar/>
+                    </div>
+                  </Col>
+                  <Col>
+                    <OpenConversation/>
+                  </Col>
                 </ConversationsProvider>
               </ContactsProvider>
-            </Col>
+              </SocketProvider>
             <Col>
                 <div className="ButtonsContainer">
                     {/* <button className="PageButton" onClick={handleStartGame}>Game</button>
