@@ -11,7 +11,7 @@ export default function LoginPage() {
         event.preventDefault();
         console.log('Username:', username);
         console.log('Password:', password);
-        login();
+        login(username);
     }
 
     return (

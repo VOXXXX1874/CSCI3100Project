@@ -27,7 +27,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // allow cross region
-app.use(cors())
+app.use(cors());
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -62,30 +63,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "localhost:5000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
-});
-
-
-io.on('connection', socket => {
-  const id = socket.handshake.query.id
-  socket.join(id)
-
-  socket.on('send-message', ({ recipients, text}) => {
-    recipients.forEach(recipient => {
-      const newRecipients = recipients.filter(r => r !== recipient)
-      newRecipients.push(id)
-      socket.broadcast.to(recipient).emit('receive-message', {
-        recipients: newRecipients, sender: id, text
-      })
-    })
-  })
-})
 
 module.exports = app;

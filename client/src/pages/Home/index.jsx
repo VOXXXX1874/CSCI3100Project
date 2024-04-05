@@ -11,7 +11,7 @@ import OpenConversation from '../../components/OpenConversation';
 import { SocketProvider } from '../../contexts/SocketProvider'
 
 export default function HomePage(){
-    const {logout, startGame, modifySettings, pastGame, leaderBoard } = useContext(PageContext);
+    const {logout, startGame, modifySettings, pastGame, leaderBoard, id } = useContext(PageContext);
     // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
     // function handleStartGame(){
     //     startGame();
@@ -39,12 +39,12 @@ export default function HomePage(){
             <h2>This is Home page</h2>
         <Container>
           <Row>
-            <SocketProvider id={"TEST"}>
+            <SocketProvider id={id}>
               <ContactsProvider>
-                <ConversationsProvider id={"TEST"}> 
+                <ConversationsProvider id={id}> 
                   <Col>
                     <div className="PageChat">
-                      <Sidebar/>
+                      <Sidebar id={id}/>
                     </div>
                   </Col>
                   <Col>
