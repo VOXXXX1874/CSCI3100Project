@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React,{useState,useContext} from 'react';
 import "./index.css";
 import { PageContext } from '../../components/appPage/pageContext';
 
@@ -7,11 +7,30 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         event.preventDefault();
-        console.log('Username:', username);
-        console.log('Password:', password);
-        login();
+        try{
+            fetch('http://localhost:9000/Login',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username:username,
+                    password:password,
+                }),
+            }).then(response=>{
+                if (response.status === 200){
+                    response.json().then(data=>{alert(data.message);})
+                    login();
+                }
+                else{
+                    response.json().then(data=>{alert(data.message);})
+                }
+            });
+        }catch(error){
+            console.error('Error:',error);
+        }
     }
 
     return (
