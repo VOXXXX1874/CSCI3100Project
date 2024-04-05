@@ -14,12 +14,18 @@ export function ConversationsProvider({ id, children }) {
   const { contacts } = useContacts()
   const socket = useSocket()
 
+  // createConversation: 
+  // Allows users to create conversation
   function createConversation(recipients) {
     setConversations(prevConversations => {
       return [...prevConversations, { recipients, messages: [] }]
     })
   }
 
+  // addMessageToConversation: 
+  // Adds a message to a conversation. If the conversation with the requested recipients already exists, it will add the 
+  // new message to the existing conversation. If the conversation does not already exist, it will greate a new conversation object
+  // with the desired recipients and new message
   const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
     setConversations(prevConversations => {
       let madeChange = false
@@ -47,6 +53,11 @@ export function ConversationsProvider({ id, children }) {
     })
   }, [setConversations])
 
+  // useEffect: 
+  // Runs every render where either 'socket' or 'addMessageToConversation' dependencies have changed
+  // If socket is null, return early. If socket is not null, 'receive-message' event listener attached to socket. 
+  // When 'receive-message' event is emitted on the socket, addMessageToConversation function is called
+  // socket.off removes event listener for 'receive-message' event from socket
   useEffect(() => {
     if (socket == null) return
 
@@ -55,12 +66,20 @@ export function ConversationsProvider({ id, children }) {
     return () => socket.off('receive-message')
   }, [socket, addMessageToConversation])
 
+  // sendMessage:
+  // emits 'send-message' event to socket with object contaning recipients and text of message
+  // Calls addMessageToConversation function to add message to a conversation
   function sendMessage(recipients, text){
     socket.emit('send-message', { recipients, text })
 
     addMessageToConversation({ recipients, text, sender: id})
   }
 
+  // formattedConversations:
+  // recipients: format the recipients of a conversation, creating an object for each recipient { id: recipient, name }
+  // messages: format the messages of a conversation, creating an object for each message { ...message, senderName: name, fromMe }
+  // selected: boolean variable of whether whether a conversation is currently selected
+  // returns formattedConversations, which contains an array of objects of form { ...conversation, messages, recipients, selected }
   const formattedConversations = conversations.map((conversation, index) => {
     const recipients = conversation.recipients.map(recipient => {
         const contact = contacts.find(contact => {
@@ -82,6 +101,8 @@ export function ConversationsProvider({ id, children }) {
     return { ...conversation, messages, recipients, selected }
   })
 
+  // value: 
+  // All the functions and variables that will be provided by ConversationsContext
   const value = {
     conversations: formattedConversations,
     selectedConversation: formattedConversations[selectedConversationIndex],

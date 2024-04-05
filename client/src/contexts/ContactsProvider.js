@@ -9,6 +9,7 @@ export function useContacts() {
 export function ContactsProvider({ children }) {
   const [contacts, setContacts] = useState([])
 
+  // Allows users to create contacts
   function createContact(id, name) {
     setContacts(prevContacts => {
       return [...prevContacts, { id, name }]
