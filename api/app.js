@@ -1,3 +1,5 @@
+const server = require('./bin/www');
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -25,7 +27,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // allow cross region
-app.use(cors())
+app.use(cors());
+
 
 app.use(logger('dev'));
 app.use(express.json());

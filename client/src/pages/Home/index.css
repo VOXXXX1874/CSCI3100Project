@@ -1,12 +1,19 @@
-.ButtonsContainer {
+  .ButtonsContainer {
     display: grid;
     grid-template-columns: repeat(3, auto);
     justify-content: center; /* Center align the buttons */
     gap: 20px;
   }
+
+  .PageChat{
+    height: 80vh;
+    display: flex;
+    border: none;
+  }
   
   .PageButton {
-    width: 350px;
+    width: 20vw;
+    display: flex;
     height: 320px;
     padding: 0;
     border: none;
@@ -28,4 +35,5 @@
     text-align: center;
     padding: 10px 0;
   }
+
   

@@ -6,8 +6,10 @@ const PageContext = createContext();
 // Provide the page context and related functions for other component
 const PageProvider = ({children}) => {
     const [page,setPage] = useState(0);
+    const [id, setId] = useState('');
 
-    function login(){
+    function login(username){
+      setId(username)
       setPage(1);
     };
 
@@ -30,7 +32,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, id }}>  
           {children}  
         </PageContext.Provider>  
       );  

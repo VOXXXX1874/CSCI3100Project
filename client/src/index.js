@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {PageProvider} from './components/appPage/pageContext'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 // Please refer to ./components/appPage/pageContext.js for detail of <PageProvider>. It provides the page context and functions for changing context.

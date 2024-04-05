@@ -22,7 +22,7 @@ export default function LoginPage() {
             }).then(response=>{
                 if (response.status === 200){
                     response.json().then(data=>{alert(data.message);})
-                    login();
+                    login(username);
                 }
                 else{
                     response.json().then(data=>{alert(data.message);})
