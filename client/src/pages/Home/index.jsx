@@ -30,9 +30,28 @@ export default function HomePage(){
         }
       });
     }
-    function handlePastGame(){
-      pastGame();
+    function handlePastGame(id){
+      fetch('http://localhost:9000/replay',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username:id,
+        }),
+        credentials: 'include',
+      }).then(response=>{
+        if(response.status === 200){
+          response.json().then(data=>{alert(data.message);})
+          console.log(response)
+          pastGame()
+        }
+        else{
+          response.json().then(data=>{alert(data.message);})
+        }
+      });
     }
+
     function handleLeaderBoard(){
       leaderBoard();
     }
@@ -70,7 +89,7 @@ export default function HomePage(){
                     <div className="ButtonText">Start Game</div>
                   </div>
                 </button>
-                <button className="PageButton" onClick={handlePastGame}>
+                <button className="PageButton" onClick={() => handlePastGame(id)}>
                   <div className="ButtonContent">
                   <img src={startGameImage} alt="Start Game" style={{ width: '20vw', height: '260px' }} />
                     <div className="ButtonText">Replay Past Games</div>

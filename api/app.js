@@ -22,6 +22,8 @@ var testLoginRouter = require("./routes/testLogin")
 var loginRouter = require("./routes/login")
 // The start game router
 var startGameRouter = require('./routes/startGame')
+// The replay router
+var replayRouter = require('./routes/replay')
 
 var app = express();
 
@@ -62,6 +64,8 @@ app.use("/testLogin",testLoginRouter);
 app.use("/Login",loginRouter);
 // Use the start game router
 app.use("/startGame",startGameRouter);
+// Use the replay router
+app.use("/replay",replayRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
