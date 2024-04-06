@@ -7,7 +7,7 @@ const {accessReplays} = require('../controllers/replayCtrl')
 router.post("/",function(req,res,next){
     try{
         console.log('replay route')
-        console.log(req)
+        console.log(req.body)
         accessReplays(req,res);
         console.log("Replays accessed!")
     }catch(error){
