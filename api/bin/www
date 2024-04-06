@@ -47,16 +47,16 @@ const io = require("socket.io")(server, {
 // Vox: I add some codes to verify the login and authentication of user before the id is joined
 io.on('connection', (socket) => {
   const id = socket.handshake.query.id
-  // const sessionId = socket.handshake.headers.cookie
-  //   ? cookie.parse(socket.handshake.headers.cookie)['session_id']
-  //   : null;
-  // if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
-  //    && sessions[sessionId].username == id){
-  //   socket.join(id);
-  // }
-  // else{
-  //   throw new Error('User does not login or has no authentication.');
-  // }
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+  }
+  else{
+    throw new Error('User does not login or has no authentication.');
+  }
 
   socket.on('send-message', ({ recipients, text}) => {
     recipients.forEach(recipient => {
