@@ -1,15 +1,17 @@
 const server = require('./bin/www');
 
+// Libraries
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session')
 
 // allow cross region
 var cors=require("cors")
 
-// !!
+// Routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // The router to test whether the API works
@@ -18,7 +20,8 @@ var testAPIRouter = require("./routes/testAPI")
 var testLoginRouter = require("./routes/testLogin")
 // The login router for practicing and testing
 var loginRouter = require("./routes/login")
-// !!
+// The start game router
+var startGameRouter = require('./routes/startGame')
 
 var app = express();
 
@@ -26,8 +29,20 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// allow cross region
-app.use(cors());
+// allow cross region and allow the credentials from our frontend
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
+// Apply session to our backend so that we know which user has login
+// The session is implemented with cookie
+app.use(session({
+  secret: 'default-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie:{secure: true, maxAge:60000}
+}));
 
 
 app.use(logger('dev'));
@@ -39,14 +54,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// !!
 // Use the test API router
 app.use("/testAPI",testAPIRouter);
 // Use the test login router
 app.use("/testLogin",testLoginRouter);
 // Use the login router
 app.use("/Login",loginRouter);
-// !!
+// Use the start game router
+app.use("/startGame",startGameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

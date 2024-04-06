@@ -7,6 +7,9 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    // Submit the username and password as json to remote 'http://localhost:9000/Login'
+    // If response status is 200, then store the returned cookie and call login
+    // Otherwise alert the error message
     const handleSubmit = async(event) => {
         event.preventDefault();
         try{
@@ -19,6 +22,7 @@ export default function LoginPage() {
                     username:username,
                     password:password,
                 }),
+                credentials: 'include',
             }).then(response=>{
                 if (response.status === 200){
                     response.json().then(data=>{alert(data.message);})

@@ -9,7 +9,7 @@ const PageProvider = ({children}) => {
     const [id, setId] = useState('');
 
     function login(username){
-      setId(username)
+      setId(username);
       setPage(1);
     };
 

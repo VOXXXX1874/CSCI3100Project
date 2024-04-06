@@ -12,11 +12,18 @@ export function useSocket() {
 // idenitfy and associate the WebSocket connection with a specific user id. This socket is set to the state
 export function SocketProvider({ id, children }) {
   const [socket, setSocket] = useState()
-
+  // Vox: Except for the id, I also let the socket send the session of this user.
+  // Session is obtained after login, so only after login the socket can be created.
+  // What's more, the backend can compare the id and res.session.username to ensure security
   useEffect(() => {
-    const newSocket = io('http://localhost:9000', { query: { id } });
-    setSocket(newSocket);
-    return () => newSocket.close();
+    try{
+      const newSocket = io('http://localhost:9000', 
+        { query: { id }, withCredentials: true });
+      setSocket(newSocket);
+      return () => newSocket.close();
+    }catch(error){
+      alert(error)
+    }
   }, [id]);
 
   return (

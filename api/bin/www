@@ -7,7 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('api:server');
 var http = require('http');
-const { Server } = require('socket.io');
+// import the cookie libaries to parse the cookie
+var cookie = require('cookie')
+// All the sessions is stored in the loginCtrl. Import the session storage.
+var {sessions} = require('../controllers/loginCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -30,7 +33,9 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+// Vox: add a cookie: ture so that the socket can receive cookie
 const io = require("socket.io")(server, {
+  cookie: true,
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -38,9 +43,20 @@ const io = require("socket.io")(server, {
   }
 });
 
+
+// Vox: I add some codes to verify the login and authentication of user before the id is joined
 io.on('connection', (socket) => {
   const id = socket.handshake.query.id
-  socket.join(id)
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+  }
+  else{
+    throw new Error('User does not login or has no authentication.');
+  }
 
   socket.on('send-message', ({ recipients, text}) => {
     recipients.forEach(recipient => {

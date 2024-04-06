@@ -13,27 +13,33 @@ import { SocketProvider } from '../../contexts/SocketProvider'
 export default function HomePage(){
     const {logout, startGame, modifySettings, pastGame, leaderBoard, id } = useContext(PageContext);
     // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
-    // function handleStartGame(){
-    //     startGame();
-    // }
-    // function handleSettings(){
-    //     modifySettings();
-    // }
-    // function handleLogout(){
-    //     logout();
-    // }
 
+    // Send the start game request.
     function handleStartGame(){
-        startGame();
+      const session = localStorage.getItem('session')
+      fetch('http://localhost:9000/startGame',{
+        method: 'POST',
+        credentials: 'include',
+      }).then(response=>{
+        if(response.status === 200){
+          response.json().then(data=>{alert(data.message);})
+          startGame();
+        }
+        else{
+          response.json().then(data=>{alert(data.message);})
+        }
+      });
     }
     function handlePastGame(){
-        pastGame();
+      pastGame();
     }
     function handleLeaderBoard(){
-        leaderBoard();
+      leaderBoard();
     }
 
     // TODO: Pass acutal ID into ConversationsProvider
+    // Vox: I find that the above handle function is not utilized.
+    // Therefore I change all the onsubmit event to the handle function.
     return(
         <div className="HomePage">
             <h2>This is Home page</h2>
@@ -58,19 +64,19 @@ export default function HomePage(){
                     {/* <button className="PageButton" onClick={handleStartGame}>Game</button>
                     <button className="PageButton" onClick={handleSettings}>Settings</button>
                     <button className="PageButton" onClick={handleLogout}>Logout</button> */}
-                <button className="PageButton" onClick={startGame}>
+                <button className="PageButton" onClick={handleStartGame}>
                   <div className="ButtonContent">
                   <img src={startGameImage} alt="Start Game" style={{ width: '20vw', height: '260px' }} />
                     <div className="ButtonText">Start Game</div>
                   </div>
                 </button>
-                <button className="PageButton" onClick={pastGame}>
+                <button className="PageButton" onClick={handlePastGame}>
                   <div className="ButtonContent">
                   <img src={startGameImage} alt="Start Game" style={{ width: '20vw', height: '260px' }} />
                     <div className="ButtonText">Replay Past Games</div>
                   </div>
                 </button>
-                <button className="PageButton" onClick={leaderBoard}>
+                <button className="PageButton" onClick={handleLeaderBoard}>
                   <div className="ButtonContent">
                   <img src={leaderBoardImage} alt="Start Game" style={{ width: '20vw', height: '270px' }} />
                     <div className="ButtonText">Leader Board</div>
