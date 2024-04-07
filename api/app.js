@@ -20,8 +20,6 @@ var testAPIRouter = require("./routes/testAPI")
 var testLoginRouter = require("./routes/testLogin")
 // The login router for practicing and testing
 var loginRouter = require("./routes/login")
-// The start game router
-var startGameRouter = require('./routes/startGame')
 
 var app = express();
 
@@ -60,8 +58,6 @@ app.use("/testAPI",testAPIRouter);
 app.use("/testLogin",testLoginRouter);
 // Use the login router
 app.use("/Login",loginRouter);
-// Use the start game router
-app.use("/startGame",startGameRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

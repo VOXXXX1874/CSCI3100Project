@@ -12,29 +12,29 @@ export default function LoginPage() {
     // Otherwise alert the error message
     const handleSubmit = async(event) => {
         event.preventDefault();
-        try{
-            fetch('http://localhost:9000/Login',{
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username:username,
-                    password:password,
-                }),
-                credentials: 'include',
-            }).then(response=>{
-                if (response.status === 200){
-                    response.json().then(data=>{alert(data.message);})
-                    login(username);
-                }
-                else{
-                    response.json().then(data=>{alert(data.message);})
-                }
-            });
-        }catch(error){
-            console.error('Error:',error);
-        }
+        fetch('http://localhost:9000/Login',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username:username,
+                password:password,
+            }),
+            credentials: 'include',
+        }).then(response=>{
+            if (response.status === 200){
+                response.json().then(data=>{alert(data.message);})
+                login(username);
+            }
+            else{
+                response.json().then(data=>{alert(data.message);})
+            }
+        }).catch(error=>{
+            alert(error);
+            alert('For development, you can directly login without reponse from backend')
+            login(username)
+        });
     }
 
     return (

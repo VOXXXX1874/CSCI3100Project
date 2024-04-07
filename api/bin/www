@@ -43,6 +43,16 @@ const io = require("socket.io")(server, {
   }
 });
 
+const match_io = require('socket.io')(server,{
+  cookie: true,
+  path: '/Match/',
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+}})
+
+
 
 // Vox: I add some codes to verify the login and authentication of user before the id is joined
 io.on('connection', (socket) => {
@@ -55,7 +65,7 @@ io.on('connection', (socket) => {
     socket.join(id);
   }
   else{
-    throw new Error('User does not login or has no authentication.');
+    //throw new Error('User does not login or has no authentication.');
   }
 
   socket.on('send-message', ({ recipients, text}) => {
@@ -67,6 +77,15 @@ io.on('connection', (socket) => {
       })
     })
   })
+})
+
+// This socket is for dealing with matching
+
+match_io.on('connection',(socket)=>{
+  console.log('Socket.IO 2 connection');
+  socket.on('begin-match', (data) => {
+    console.log('Received event2 from Socket.IO 2:', data);
+  });
 })
 
 /**
