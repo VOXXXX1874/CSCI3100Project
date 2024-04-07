@@ -11,6 +11,7 @@ var http = require('http');
 var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions} = require('../controllers/loginCtrl')
+const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -63,9 +64,11 @@ io.on('connection', (socket) => {
   if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
     socket.join(id);
+    console.log("User ",sessions[sessionId].username," is connected to chat socket")
   }
   else{
-    //throw new Error('User does not login or has no authentication.');
+    socket.disconnect(true, 'Unauthorized');
+    return;
   }
 
   socket.on('send-message', ({ recipients, text}) => {
@@ -82,10 +85,67 @@ io.on('connection', (socket) => {
 // This socket is for dealing with matching
 
 match_io.on('connection',(socket)=>{
-  console.log('Socket.IO 2 connection');
-  socket.on('begin-match', (data) => {
-    console.log('Received event2 from Socket.IO 2:', data);
+  const id = socket.handshake.query.id
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+    console.log("User ",sessions[sessionId].username," is connected to match socket")
+  }
+  else{
+    socket.disconnect(true, 'Unauthorized');
+    return;
+  }
+
+  socket.on('begin-match', () => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    startGame(sessions[sessionId].username).then((result)=>{
+      match_io.to(result.player1).emit('find-match', result);
+      match_io.to(result.player2).emit('find-match', result);
+    }).catch((err)=>{
+      console.log(err)
+    })
   });
+
+  socket.on('cancel-match', () => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    cancelMatch(sessions[sessionId].username)
+  });
+
+  socket.on('player-confirm',({match}) => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+      console.log("receive",sessions[sessionId].username,"confirm")
+    confirmMatch(sessions[sessionId].username,match).then((result)=>{
+      console.log("Two player of this match confirm", result)
+      match_io.to(match.player1).emit('receive-match-result', "accept");
+      match_io.to(match.player2).emit('receive-match-result', "accept");
+    }).catch((err)=>{
+      console.log(err)
+    })
+  })
+
+  socket.on('player-refuse',({match})=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+      console.log("receive",sessions[sessionId].username,"refuse")
+      refuseMatch(sessions[sessionId].username,match)
+      if(sessions[sessionId].username==match.player1){
+        match_io.to(match.player2).emit('receive-match-result', "refuse");
+      }
+      else if(sessions[sessionId].username==match.player2){
+        match_io.to(match.player1).emit('receive-match-result', "refuse");
+      }
+  })
+
 })
 
 /**

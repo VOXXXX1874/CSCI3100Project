@@ -27,6 +27,7 @@ export function ConversationsProvider({ id, children }) {
   // new message to the existing conversation. If the conversation does not already exist, it will greate a new conversation object
   // with the desired recipients and new message
   const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
+    console.log(text)
     setConversations(prevConversations => {
       let madeChange = false
       const newMessage = { sender, text }

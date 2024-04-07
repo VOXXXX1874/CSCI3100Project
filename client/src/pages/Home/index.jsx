@@ -68,7 +68,7 @@ export default function HomePage(){
                     {/* <button className="PageButton" onClick={handleStartGame}>Game</button>
                     <button className="PageButton" onClick={handleSettings}>Settings</button>
                     <button className="PageButton" onClick={handleLogout}>Logout</button> */}
-                  <MatchSocketProvider>
+                  <MatchSocketProvider id = {id}>
                   <StartGameButton startGame = {startGame}/>
                   </MatchSocketProvider>
                 <button className="PageButton" onClick={() => handlePastGame(id)}>
