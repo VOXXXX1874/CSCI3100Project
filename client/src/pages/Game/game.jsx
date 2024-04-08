@@ -128,9 +128,7 @@ function calculateWinner(squares) {
         let x = j, y = i, count = 1;
         for (let k = 0; k < 5; k++) {
           const newIndex = (y + dy) * width + (x + dx);
-          if (newIndex < 0 || newIndex >= width * height){
-            break;
-          }
+          if (newIndex < 0 || newIndex >= width * height) break; // Break if index is out of range
           if (squares[newIndex] !== currentPlayer) break; // Break if the sequence is interrupted
           y += dy;
           x += dx;
@@ -138,7 +136,7 @@ function calculateWinner(squares) {
         }
         if (count === 5) {
           // Winning sequence found, return the player ID
-          console.log("WINNERRR")
+          console.log("WINNER: ", currentPlayer)
           return currentPlayer;
         }
       }
