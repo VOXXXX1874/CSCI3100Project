@@ -1,6 +1,6 @@
 .game {
     display: grid;
-    grid-template-columns: 1fr 800px 1fr;
+    grid-template-columns: 1fr 1000px 1fr;
     height: 70vh;
     place-items: center;
 }
@@ -29,8 +29,8 @@
     font-size: 24px;
     font-weight: bold;
     line-height: 34px;
-    height: 30px;
-    width: 33px;
+    height: 29px;
+    width: 34px;
 }
 
 .square.hovered.HX{
@@ -59,12 +59,12 @@
     grid-column:2;
     background-image:url('./chessboard.jpeg');
     background-repeat: no-repeat;
-    background-size: 465px 465px;
-    background-position-x: 15px;
-    background-position-y: 15px;
+    background-size: 670px 670px;
+    background-position-x: -15px;
+    background-position-y: -18px;
 }
 
-.game-info {
+.retract {
     grid-column:3;
     margin-right: 0px;
     overflow-y: scroll;

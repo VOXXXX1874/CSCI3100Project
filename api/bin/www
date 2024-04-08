@@ -171,13 +171,19 @@ game_io.on('connection', (socket) => {
     return;
   }
 
-  socket.on('place-stone',({place})=>{
+  socket.on('place-stone',(place)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
-    console.log("receive place stone from", sessions[sessionId].username)
+    console.log("receive place stone from", sessions[sessionId].username,"place at",place)
     //placeStone(sessions[sessionId].username,place).then().catch()
-    placeStone(sessions[sessionId].username,place)
+    placeStone(sessions[sessionId].username,place).then((result)=>{
+      game_io.to(result.anotherPlayer).emit("handle-play",place,result.color)
+      game_io.to(sessions[sessionId].username).emit("handle-play",place,result.color)
+    }).catch((err)=>{
+      console.log(err)
+    })
+
   })
 })
 

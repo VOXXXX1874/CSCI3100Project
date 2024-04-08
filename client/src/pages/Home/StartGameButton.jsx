@@ -66,7 +66,7 @@ export default function StartGameButton({startGame}){
         }
       })
   
-      return () => socket.off('find-match')
+      return () => socket.off('receive-match-result')
     }, [socket,startGame])
 
     return (

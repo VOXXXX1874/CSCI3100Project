@@ -39,7 +39,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color }}>  
           {children}  
         </PageContext.Provider>  
       );  

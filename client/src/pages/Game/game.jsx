@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {useGameSocket} from '../../contexts/GameSocketProvider'
+import {Modal,Button} from 'react-bootstrap';
 
 import './game.css'
 
@@ -28,14 +29,29 @@ export default function Game({color}){
   // x stands for black and o stands for white
   const socket = useGameSocket()
   const [xIsNext,setXIsNext] = useState(true);
-  const [history,setHistory] = useState([Array(225).fill(null)]);
+  const [history,setHistory] = useState([Array(361).fill(null)]);
   const [currentMove,setCurrentMove] = useState(0);
+  const [winner,setWinner] = useState(null)
   const currentSquares = history[currentMove];
-  function handlePlay(nextSquares){
-    const nextHistory = [...history.slice(0,currentMove+1),nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length-1)
-    setXIsNext(!xIsNext);
+  
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('handle-play', (place,player)=>{
+      let nextSquares = history[history.length-1]
+      nextSquares[place] = player? "O":"X"
+      setXIsNext(player)
+      const nextHistory = [...history.slice(0,currentMove+1),nextSquares];
+      setHistory(nextHistory);
+      setCurrentMove(nextHistory.length-1)
+      setWinner(calculateWinner(history[currentMove]))
+    })
+
+    return () => socket.off('handle-play')
+  }, [socket,history,currentMove])
+
+  function summaryGame(){
+
   }
   //function jumpTo(nextMove){
   //  setCurrentMove(nextMove)
@@ -54,38 +70,38 @@ export default function Game({color}){
   //    </li>
   //  )
   //})
-  const winner = calculateWinner(currentSquares);
-  let status;
-  if(winner){
-    status = 'Winner: ' + winner;
-  }else{
-    status = 'Next player: ' + (xIsNext ? 'Black':'White');
-  }
+  let status = 'Next player: ' + (xIsNext ? 'Black':'White');
+  console.log(xIsNext)
   return(
     <div className='game'>
       <div className="status">{status}</div>
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} playerColor={color} socket={socket}/>
+        <Board xIsNext={xIsNext} squares={currentSquares} playerColor={color} socket={socket}/>
       </div>
-      {/*<div className="game-info">
-        <ol>{moves}</ol>
-      </div>*/}
+      <div className="game-info">
+        <Button>Rectract</Button>
+      </div>
+      <Modal show={winner}>
+        <GameEndModal summaryGame={summaryGame} winner={winner}/>
+      </Modal>
     </div>
   );
 }
 
-function Board({xIsNext,squares,onPlay,playerColor,socket}) {
+function Board({xIsNext,squares,playerColor,socket}) {
 
   function handleClick(i){
-    if(squares[i]||calculateWinner(squares)||playerColor===xIsNext){
+    // xIsNext means black is next, in which player white color=true === xIsNext
+    if(squares[i]||playerColor===xIsNext){
       return;
     }
-    socket.emit('place-stone',{i})
+    console.log(i)
+    socket.emit('place-stone',i)
   }
 
   const rowsArray = [];
-  const width = 15;
-  const height = 15;
+  const width =19;
+  const height = 19;
   for(let i = 0; i < height; i++){
     const buttonsArray = [];
     for(let j = 0; j < width; j++){
@@ -108,8 +124,8 @@ function Board({xIsNext,squares,onPlay,playerColor,socket}) {
 }
 
 function calculateWinner(squares) {
-  const width = 15;
-  const height = 15;
+  const width = 19;
+  const height = 19;
 
   const dirs = [
     [1,0], [-1,0], [0,1], [0,-1],
@@ -144,5 +160,23 @@ function calculateWinner(squares) {
   }
   // No winning sequence found
   console.log("no winning sequence")
-  return;
+  return null;
+}
+
+function GameEndModal({summaryGame, winner}) {
+  let winnerColor = null
+  if(winner==="X"){
+    winnerColor = "black"
+  }
+  else if(winner==="O"){
+    winnerColor = "white"
+  }
+  return (
+    <>
+      <Modal.Header closeButton>The player with {winnerColor} stone win!!!</Modal.Header>
+      <Modal.Body>
+        <Button onClick={summaryGame}>Return to Home</Button>
+      </Modal.Body>
+    </>
+  )
 }
