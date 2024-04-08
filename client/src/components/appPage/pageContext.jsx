@@ -22,12 +22,8 @@ const PageProvider = ({children}) => {
       setPage(0);
     }
 
-<<<<<<< HEAD
-    function startGame(){
-=======
     function startGame(color){
       setColor(color)
->>>>>>> Dev
       setPage(2);
     }
 
@@ -41,17 +37,12 @@ const PageProvider = ({children}) => {
       setPage(5);
     }
 
-<<<<<<< HEAD
     function createAccount(){
       setPage(6);
     }
 
     return (  
         <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id }}>  
-=======
-    return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, id, color }}>  
->>>>>>> Dev
           {children}  
         </PageContext.Provider>  
       );  
