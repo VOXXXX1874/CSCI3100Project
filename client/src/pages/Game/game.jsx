@@ -107,6 +107,44 @@ function Board({xIsNext,squares,onPlay,playerColor,socket}) {
   );
 }
 
-function calculateWinner(squares){
-    return null;
+function calculateWinner(squares) {
+  const width = 15;
+  const height = 15;
+
+  const dirs = [
+    [1,0], [-1,0], [0,1], [0,-1],
+    [1,1], [1,-1], [-1,1], [-1,-1]
+  ];
+
+  // Iterate over each cell of the board
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const index = i * width + j;
+      const currentPlayer = squares[index];
+      if (currentPlayer === null) continue; // Skip if the cell is empty
+
+      // Check for winning sequences in all directions
+      for (const [dx, dy] of dirs) {
+        let x = j, y = i, count = 1;
+        for (let k = 0; k < 5; k++) {
+          const newIndex = (y + dy) * width + (x + dx);
+          if (newIndex < 0 || newIndex >= width * height){
+            break;
+          }
+          if (squares[newIndex] !== currentPlayer) break; // Break if the sequence is interrupted
+          y += dy;
+          x += dx;
+          count++;
+        }
+        if (count === 5) {
+          // Winning sequence found, return the player ID
+          console.log("WINNERRR")
+          return currentPlayer;
+        }
+      }
+    }
+  }
+  // No winning sequence found
+  console.log("no winning sequence")
+  return;
 }
