@@ -9,7 +9,7 @@ export default function CreateAccountPage(){
     const [password, setPassword] = useState("");
 
     function handleSubmit (){
-        console.log('test');
+        console.log('another test');
     }
 
     // const handleCreateAccount = async (event) => {
