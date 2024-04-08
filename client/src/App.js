@@ -7,8 +7,11 @@ import {useEffect,useContext,useState} from 'react';
 import PastGamesPage from './pages/PastGames';
 import LeaderBoardPage from './pages/LeaderBoard';
 import "./App.css"
+<<<<<<< HEAD
 import CreateAccountPage from './pages/CreateAccount';
 
+=======
+>>>>>>> Dev
 
 // Map different page context to different pages so that the application knows which page to show.
 const PagesMap = {
@@ -18,7 +21,10 @@ const PagesMap = {
   3:<SettingsPage/>,
   4:<PastGamesPage/>,
   5:<LeaderBoardPage/>,
+<<<<<<< HEAD
   6:<CreateAccountPage/>
+=======
+>>>>>>> Dev
 }
 
 export default function App(){

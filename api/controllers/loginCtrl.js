@@ -9,6 +9,12 @@ async function getUserInformation_test(username){
 // sessions is an object to maintain all the sessions
 var sessions = {};
 
+<<<<<<< HEAD
+=======
+// states is an object to maintain states of each online user
+var states = {};
+
+>>>>>>> Dev
 // This controller is called by the router, ask database controller for user information, and send the user information back
 async function verifyLoginInformation(req,res){
     // Read the username and password from the request
@@ -22,6 +28,7 @@ async function verifyLoginInformation(req,res){
     // After passing the verification, a random session id is generated and stored in session
     // with some related infomations about the user
     const sessionId = Math.random().toString(36).substring(7);
+<<<<<<< HEAD
     sessions[sessionId] = { authenticated: true, username: username };
     // Send the session id to client by cookie
     res.cookie('session_id', sessionId, { maxAge: 60000 });
@@ -29,3 +36,14 @@ async function verifyLoginInformation(req,res){
 }
 
 module.exports = {verifyLoginInformation,sessions};
+=======
+    sessions[sessionId] = { authenticated: true, username: username}
+    // Vox: I will make use of the waitingMatch and match later
+    states[username] = {waitingMatch:false, match:'', game:''}
+    // Send the session id to client by cookie
+    res.cookie('session_id', sessionId, { maxAge: 60000, secure:true, httpOnly:true });
+    res.status(200).json({ message: 'Successfully login' });
+}
+
+module.exports = {verifyLoginInformation,sessions,states};
+>>>>>>> Dev

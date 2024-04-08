@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const {sessions} = require('./loginCtrl')
+=======
+const {states} = require('./loginCtrl')
+>>>>>>> Dev
 
 class Queue {
     constructor() {
@@ -88,6 +92,10 @@ async function matchTwoPlayers(){
         }
         else{
             const match={player1:player1,player2:player2}
+<<<<<<< HEAD
+=======
+            // One bug here, player1+vs+player2 cannot uniquely identify one match. 
+>>>>>>> Dev
             matchedPlayerPool[player1+"vs"+player2] = {}
             matchedPlayerPool[player1+"vs"+player2][player1]=false
             matchedPlayerPool[player1+"vs"+player2][player2]=false

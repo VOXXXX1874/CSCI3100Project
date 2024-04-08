@@ -56,12 +56,22 @@ input {
 .signUpText {
     text-align: center;
     margin-top: 20px;
+<<<<<<< HEAD
+=======
+}
+
+.signUpText a {
+>>>>>>> Dev
     color: #007bff;
     text-decoration: none;
 }
 
+<<<<<<< HEAD
 
 
 .signUpText:hover {
+=======
+.signUpText a:hover {
+>>>>>>> Dev
     text-decoration: underline;
 }

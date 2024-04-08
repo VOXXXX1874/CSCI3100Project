@@ -3,7 +3,11 @@ import "./index.css";
 import { PageContext } from '../../components/appPage/pageContext';
 
 export default function LoginPage() {
+<<<<<<< HEAD
     const { login, createAccount } = useContext(PageContext);
+=======
+    const { login } = useContext(PageContext);
+>>>>>>> Dev
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -35,19 +39,26 @@ export default function LoginPage() {
             alert('For development, you can directly login without reponse from backend')
             login(username)
         });
+<<<<<<< HEAD
 
         
     }
 
     function handleCreateAccount() {
         createAccount();
+=======
+>>>>>>> Dev
     }
 
     return (
         <div className="loginContainer">
             <h1>Sign in</h1>
+<<<<<<< HEAD
             <a>New user?</a>
             <p className="signUpText" onClick={handleCreateAccount}> Create an account</p>
+=======
+            <p className="signUpText">New user? <a href="">Create an account</a></p>
+>>>>>>> Dev
 
             <form onSubmit={handleSubmit} className="loginForm">
                 <div className="inputContainer">

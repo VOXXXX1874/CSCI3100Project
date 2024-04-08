@@ -41,7 +41,11 @@ app.use(session({
   secret: 'default-secret-key',
   resave: false,
   saveUninitialized: true,
+<<<<<<< HEAD
   cookie:{secure: true, maxAge:60000}
+=======
+  cookie:{secure: true, maxAge:60000,sameSite:'none',httpOnly:true},
+>>>>>>> Dev
 }));
 
 
