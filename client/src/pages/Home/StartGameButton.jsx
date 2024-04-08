@@ -48,20 +48,21 @@ export default function StartGameButton({startGame}){
       if (socket == null) return
   
       socket.on('receive-match-result', (message)=>{
+        setModalOpen(false)
+        setFindMatch(false)
+        setMatch({})
+        setHasConfirm(false)
         if(message==='refuse'){
           setModalOpen(true)
-          setFindMatch(false)
-          setMatch({})
-          setHasConfirm(false)
           alert("Another player refuse the match. Now you return to waiting queue")
         }
-        else if(message==='accept'){
-          setModalOpen(false)
-          setFindMatch(false)
-          setMatch({})
-          setHasConfirm(false)
+        else if(message==='accept-white'){
+          startGame(true)
           alert("Both players confirm! Game start!")
-          startGame()
+        }
+        else if(message==='accept-black'){
+          startGame(false)
+          alert("Both players confirm! Game start!")
         }
       })
   
@@ -99,7 +100,7 @@ export default function StartGameButton({startGame}){
 function ConfirmMatchModal({match,confirmMatch,refuseMatch, hasConfirm}){
     return(
       <>
-        <Modal.Header closeButton>Find another player! {match.player1} vs {match.player2}</Modal.Header>
+        <Modal.Header>Find another player! {match.player1} vs {match.player2}</Modal.Header>
         <Modal.Body>
           {hasConfirm?
           <ConfirmMessage/>:

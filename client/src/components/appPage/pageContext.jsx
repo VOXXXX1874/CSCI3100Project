@@ -7,6 +7,8 @@ const PageContext = createContext();
 const PageProvider = ({children}) => {
     const [page,setPage] = useState(0);
     const [id, setId] = useState('');
+    // black color is false and white color is true
+    const [color,setColor] = useState(false);
 
     function login(username){
       setId(username);
@@ -17,7 +19,8 @@ const PageProvider = ({children}) => {
       setPage(0);
     }
 
-    function startGame(){
+    function startGame(color){
+      setColor(color)
       setPage(2);
     }
 
@@ -32,7 +35,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, id }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, id, color }}>  
           {children}  
         </PageContext.Provider>  
       );  

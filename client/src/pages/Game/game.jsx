@@ -1,4 +1,6 @@
 import React, {useState} from 'react'
+import {useGameSocket} from '../../contexts/GameSocketProvider'
+
 import './game.css'
 
 // Please refer to the React Tic Tac Toe tutorial. I might write some comment later.
@@ -22,7 +24,9 @@ function Square({value,onSquareClick,xIsNext}){
   return SquaresMap[value];
 }
   
-export default function Game(){
+export default function Game({color}){
+  // x stands for black and o stands for white
+  const socket = useGameSocket()
   const [xIsNext,setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(225).fill(null)]);
   const [currentMove,setCurrentMove] = useState(0);
@@ -33,57 +37,50 @@ export default function Game(){
     setCurrentMove(nextHistory.length-1)
     setXIsNext(!xIsNext);
   }
-  function jumpTo(nextMove){
-    setCurrentMove(nextMove)
-    setXIsNext(nextMove%2===0)
-  }
-  const moves = history.map((squares,move)=>{
-    let description;
-    if(move > 0){
-      description = 'Go to move #' + move;
-    }else{
-      description = 'Go to game start';
-    }
-    return (
-      <li key={move}>
-        <button onClick={()=>jumpTo(move)}>{description}</button>
-      </li>
-    )
-  })
+  //function jumpTo(nextMove){
+  //  setCurrentMove(nextMove)
+  //  setXIsNext(nextMove%2===0)
+  //}
+  //const moves = history.map((squares,move)=>{
+  //  let description;
+  //  if(move > 0){
+  //    description = 'Go to move #' + move;
+  //  }else{
+  //    description = 'Go to game start';
+  //  }
+  //  return (
+  //    <li key={move}>
+  //      <button onClick={()=>jumpTo(move)}>{description}</button>
+  //    </li>
+  //  )
+  //})
   const winner = calculateWinner(currentSquares);
   let status;
   if(winner){
     status = 'Winner: ' + winner;
   }else{
-    status = 'Next player: ' + (xIsNext ? 'X':'O');
+    status = 'Next player: ' + (xIsNext ? 'Black':'White');
   }
   return(
     <div className='game'>
       <div className="status">{status}</div>
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} playerColor={color} socket={socket}/>
       </div>
-      <div className="game-info">
+      {/*<div className="game-info">
         <ol>{moves}</ol>
-      </div>
+      </div>*/}
     </div>
   );
 }
 
-function Board({xIsNext,squares,onPlay}) {
+function Board({xIsNext,squares,onPlay,playerColor,socket}) {
 
   function handleClick(i){
-    if(squares[i]||calculateWinner(squares)){
+    if(squares[i]||calculateWinner(squares)||playerColor===xIsNext){
       return;
     }
-    const nextSquares = squares.slice();
-    if(xIsNext){
-      nextSquares[i] = "X";
-    }
-    else{
-      nextSquares[i] = "O";
-    }
-    onPlay(nextSquares);
+    socket.emit('place-stone',{i})
   }
 
   const rowsArray = [];

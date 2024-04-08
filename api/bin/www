@@ -10,8 +10,9 @@ var http = require('http');
 // import the cookie libaries to parse the cookie
 var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
-var {sessions} = require('../controllers/loginCtrl')
+var {sessions,states} = require('../controllers/loginCtrl')
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
+const {createGame,placeStone} = require('../controllers/gameCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -36,16 +37,14 @@ server.on('listening', onListening);
 
 // Vox: add a cookie: ture so that the socket can receive cookie
 const io = require("socket.io")(server, {
-  cookie: true,
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
-    credentials: true
+    credentials: true,
   }
 });
 
 const match_io = require('socket.io')(server,{
-  cookie: true,
   path: '/Match/',
   cors: {
     origin: "http://localhost:3000",
@@ -53,7 +52,16 @@ const match_io = require('socket.io')(server,{
     credentials: true,
 }})
 
+const game_io = require('socket.io')(server,{
+  path: '/Game/',
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+}})
 
+// If you encouter problems like socket disconnects before establishing, 
+// you can check and delete the socket.disconnect below for testing.
 
 // Vox: I add some codes to verify the login and authentication of user before the id is joined
 io.on('connection', (socket) => {
@@ -61,7 +69,7 @@ io.on('connection', (socket) => {
   const sessionId = socket.handshake.headers.cookie
     ? cookie.parse(socket.handshake.headers.cookie)['session_id']
     : null;
-  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+  if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to chat socket")
@@ -89,7 +97,7 @@ match_io.on('connection',(socket)=>{
   const sessionId = socket.handshake.headers.cookie
     ? cookie.parse(socket.handshake.headers.cookie)['session_id']
     : null;
-  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+  if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to match socket")
@@ -122,11 +130,12 @@ match_io.on('connection',(socket)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
-      console.log("receive",sessions[sessionId].username,"confirm")
+    console.log("receive",sessions[sessionId].username,"confirm")
     confirmMatch(sessions[sessionId].username,match).then((result)=>{
       console.log("Two player of this match confirm", result)
-      match_io.to(match.player1).emit('receive-match-result', "accept");
-      match_io.to(match.player2).emit('receive-match-result', "accept");
+      createGame(result)
+      match_io.to(result.player1).emit('receive-match-result', "accept-white");
+      match_io.to(result.player2).emit('receive-match-result', "accept-black");
     }).catch((err)=>{
       console.log(err)
     })
@@ -136,16 +145,40 @@ match_io.on('connection',(socket)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
-      console.log("receive",sessions[sessionId].username,"refuse")
-      refuseMatch(sessions[sessionId].username,match)
-      if(sessions[sessionId].username==match.player1){
-        match_io.to(match.player2).emit('receive-match-result', "refuse");
-      }
-      else if(sessions[sessionId].username==match.player2){
-        match_io.to(match.player1).emit('receive-match-result', "refuse");
-      }
+    console.log("receive",sessions[sessionId].username,"refuse")
+    refuseMatch(sessions[sessionId].username,match)
+    if(sessions[sessionId].username==match.player1){
+      match_io.to(match.player2).emit('receive-match-result', "refuse");
+    }
+    else if(sessions[sessionId].username==match.player2){
+      match_io.to(match.player1).emit('receive-match-result', "refuse");
+    }
   })
+})
 
+game_io.on('connection', (socket) => {
+  const id = socket.handshake.query.id
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+    console.log("User ",sessions[sessionId].username," is connected to game socket")
+  }
+  else{
+    socket.disconnect(true, 'Unauthorized');
+    return;
+  }
+
+  socket.on('place-stone',({place})=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    console.log("receive place stone from", sessions[sessionId].username)
+    //placeStone(sessions[sessionId].username,place).then().catch()
+    placeStone(sessions[sessionId].username,place)
+  })
 })
 
 /**
