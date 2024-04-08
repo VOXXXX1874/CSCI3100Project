@@ -34,8 +34,12 @@ const PageProvider = ({children}) => {
       setPage(5);
     }
 
+    function createAccount(){
+      setPage(6);
+    }
+
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, id, color }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id }}>  
           {children}  
         </PageContext.Provider>  
       );  

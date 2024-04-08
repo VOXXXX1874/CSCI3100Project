@@ -1,20 +1,88 @@
-import React,{useContext} from 'react';
+import React,{useContext, useState} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
 
+
 export default function CreateAccountPage(){
-    const {logout, startGame, modifySettings} = useContext(PageContext);
-    // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
-    function handleStartGame(){
-        startGame();
+    const { login, createAccount } = useContext(PageContext);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    function handleSubmit (){
+        console.log('test');
     }
+
+    // const handleCreateAccount = async (event) => {
+    //     event.preventDefault();
+    
+    //     // Obtain form input values
+    //     const username = document.getElementById('username').value;
+    //     const password = document.getElementById('password').value;
+    
+    //     try {
+    //         const response = await fetch('http://localhost:9000/CreateAccount', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 username: username,
+    //                 password: password,
+    //             }),
+    //             credentials: 'include',
+    //         });
+    
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             alert(data.message);
+    //             // Optionally, automatically log in the user after creating the account
+    //             login(username);
+    //         } else {
+    //             const data = await response.json();
+    //             alert(data.message);
+    //         }
+    //     } catch (error) {
+    //         alert(error);
+    //         alert('For development, you can directly create an account without response from backend');
+    //         // Optionally, handle error scenarios, e.g., display an error message to the user
+    //     }
+    // }
+    
     return(
-        <div className="CreateAccountPage">
-            <h2>This is Home page</h2>
-            <div className="ButtonsContainer">
-                <button className="PageButton" onClick={handleStartGame}>Game</button>
-            </div>
+        <div className="creatAccountContainer">
+            <h1>Create an account</h1>
+            <form onSubmit={handleSubmit} className="createAccountForm">
+                <div className="inputContainer">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                    />
+                </div>
+                <div className="inputContainer">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                    />
+                </div>
+                <div className="inputContainer">
+                    <label htmlFor="password">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                    />
+                </div>
+                <button type="submit" className="createAccountButton">CREATE ACCOUNT</button>
+            </form>
         </div>
         
     );
+
 }
