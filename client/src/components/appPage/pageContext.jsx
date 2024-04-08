@@ -7,11 +7,8 @@ const PageContext = createContext();
 const PageProvider = ({children}) => {
     const [page,setPage] = useState(0);
     const [id, setId] = useState('');
-<<<<<<< HEAD
-=======
     // black color is false and white color is true
     const [color,setColor] = useState(false);
->>>>>>> Dev
 
     function login(username){
       setId(username);
