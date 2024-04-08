@@ -1,0 +1,209 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('api:server');
+var http = require('http');
+// import the cookie libaries to parse the cookie
+var cookie = require('cookie')
+// All the sessions is stored in the loginCtrl. Import the session storage.
+var {sessions} = require('../controllers/loginCtrl')
+const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '9000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+// Vox: add a cookie: ture so that the socket can receive cookie
+const io = require("socket.io")(server, {
+  cookie: true,
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
+
+const match_io = require('socket.io')(server,{
+  cookie: true,
+  path: '/Match/',
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+}})
+
+
+
+// Vox: I add some codes to verify the login and authentication of user before the id is joined
+io.on('connection', (socket) => {
+  const id = socket.handshake.query.id
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+    console.log("User ",sessions[sessionId].username," is connected to chat socket")
+  }
+  else{
+    socket.disconnect(true, 'Unauthorized');
+    return;
+  }
+
+  socket.on('send-message', ({ recipients, text}) => {
+    recipients.forEach(recipient => {
+      const newRecipients = recipients.filter(r => r !== recipient)
+      newRecipients.push(id)
+      socket.broadcast.to(recipient).emit('receive-message', {
+        recipients: newRecipients, sender: id, text
+      })
+    })
+  })
+})
+
+// This socket is for dealing with matching
+
+match_io.on('connection',(socket)=>{
+  const id = socket.handshake.query.id
+  const sessionId = socket.handshake.headers.cookie
+    ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+    : null;
+  if(sessionId != null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
+     && sessions[sessionId].username == id){
+    socket.join(id);
+    console.log("User ",sessions[sessionId].username," is connected to match socket")
+  }
+  else{
+    socket.disconnect(true, 'Unauthorized');
+    return;
+  }
+
+  socket.on('begin-match', () => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    startGame(sessions[sessionId].username).then((result)=>{
+      match_io.to(result.player1).emit('find-match', result);
+      match_io.to(result.player2).emit('find-match', result);
+    }).catch((err)=>{
+      console.log(err)
+    })
+  });
+
+  socket.on('cancel-match', () => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    cancelMatch(sessions[sessionId].username)
+  });
+
+  socket.on('player-confirm',({match}) => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+      console.log("receive",sessions[sessionId].username,"confirm")
+    confirmMatch(sessions[sessionId].username,match).then((result)=>{
+      console.log("Two player of this match confirm", result)
+      match_io.to(match.player1).emit('receive-match-result', "accept");
+      match_io.to(match.player2).emit('receive-match-result', "accept");
+    }).catch((err)=>{
+      console.log(err)
+    })
+  })
+
+  socket.on('player-refuse',({match})=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+      console.log("receive",sessions[sessionId].username,"refuse")
+      refuseMatch(sessions[sessionId].username,match)
+      if(sessions[sessionId].username==match.player1){
+        match_io.to(match.player2).emit('receive-match-result', "refuse");
+      }
+      else if(sessions[sessionId].username==match.player2){
+        match_io.to(match.player1).emit('receive-match-result', "refuse");
+      }
+  })
+
+})
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
