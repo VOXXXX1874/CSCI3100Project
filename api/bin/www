@@ -12,7 +12,7 @@ var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions,states} = require('../controllers/loginCtrl')
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
-const {createGame,placeStone,summaryGame,getOpponent} = require('../controllers/gameCtrl')
+const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent} = require('../controllers/gameCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -184,7 +184,6 @@ game_io.on('connection', (socket) => {
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive place stone from", sessions[sessionId].username,"place at",place)
-    //placeStone(sessions[sessionId].username,place).then().catch()
     placeStone(sessions[sessionId].username,place).then((result)=>{
       game_io.to(result.anotherPlayer).emit("handle-play",place,result.color)
       game_io.to(sessions[sessionId].username).emit("handle-play",place,result.color)
@@ -205,6 +204,32 @@ game_io.on('connection', (socket) => {
     })
   })
 
+  socket.on('retract-request',()=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    console.log("Player", sessions[sessionId].username, "raise retract request")
+    retractRequest(sessions[sessionId].username).then((result)=>{
+      game_io.to(result).emit("handle-retract-request")
+    }).catch((err)=>{
+      console.log(err)
+    })
+  })
+
+  socket.on('response-retract-request',(message)=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    console.log("Player",sessions[sessionId].username,"response with",message? 'confirm':'refuse')
+    responseRetractRequest(sessions[sessionId].username,message).then((result)=>{
+      game_io.to(result.playerWhite).emit("end-retract-request",true)
+      game_io.to(result.playerBlack).emit("end-retract-request",true)
+    }).catch((err)=>{
+      console.log(err)
+      game_io.to(result.playerWhite).emit("end-retract-request",false)
+      game_io.to(result.playerBlack).emit("end-retract-request",false)
+    })
+  })
 })
 
 /**
