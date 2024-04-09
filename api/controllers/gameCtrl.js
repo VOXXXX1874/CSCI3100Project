@@ -7,8 +7,17 @@ async function createGame(match){
     gamePool[match.player1+"vs"+match.player2] = game
     states[match.player1].game=match.player1+"vs"+match.player2
     states[match.player2].game=match.player1+"vs"+match.player2
-    console.log("game pool:",gamePool)
-    console.log("states:",states)
+    // console.log("game pool:",gamePool)
+    // console.log("states:",states)
+}
+
+async function getOpponent(username){
+    console.log('getOpponent')
+    gameId = states[username].game
+    if (gamePool[gameId].playerBlack === username){
+        return gamePool[gameId].playerWhite
+    } 
+    return gamePool[gameId].playerBlack
 }
 
 async function placeStone(username,place){
@@ -56,4 +65,4 @@ async function summaryGame(username,winner){
     })
 }
 
-module.exports = {createGame,placeStone,summaryGame}
+module.exports = {createGame,placeStone,summaryGame,getOpponent}
