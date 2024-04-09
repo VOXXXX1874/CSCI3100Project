@@ -55,11 +55,9 @@ export default function Game({color}){
   }, [socket,history,currentMove])
 
   useEffect(() => {
-    console.log("HELLPPH HEHLFSHFSHLFSKLDS")
     if (socket == null) return
 
     socket.on('create-game-chat', (opponent) =>{
-      console.log("HELLOOOOOO")
       console.log(opponent)
       createConversation([opponent])
       let conversationIndex = returnConversationIndex(opponent)

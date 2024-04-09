@@ -7,8 +7,8 @@ async function createGame(match){
     gamePool[match.player1+"vs"+match.player2] = game
     states[match.player1].game=match.player1+"vs"+match.player2
     states[match.player2].game=match.player1+"vs"+match.player2
-    // console.log("game pool:",gamePool)
-    // console.log("states:",states)
+    console.log("game pool:",gamePool)
+    console.log("states:",states)
 }
 
 async function getOpponent(username){
