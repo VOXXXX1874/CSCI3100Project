@@ -20,7 +20,7 @@ async function placeStone(username,place){
                 gamePool[gameId].gameHistory.push({playerBlack:place})
                 gamePool[gameId].gameState=1
                 resolve({anotherPlayer:gamePool[gameId].playerWhite,color:false})
-            }// gameStat===0 means it is white turn now
+            }// gameState===1 means it is white turn now
             else if (gamePool[gameId].playerWhite === username&& gamePool[gameId].gameState===1){
                 gamePool[gameId].gameHistory.push({playerWhite:place})
                 gamePool[gameId].gameState=0
@@ -36,4 +36,24 @@ async function placeStone(username,place){
     })
 }
 
-module.exports = {createGame,placeStone}
+async function summaryGame(username,winner){
+    return new Promise((resolve,reject)=>{
+        try{
+            gameId = states[username].game
+            states[username].game = ''
+            // gameState===2 means one player has left the game
+            if(gamePool[gameId].gameState!=2){
+                gamePool[gameId].gameState=2
+                reject("This game"+gameId+"will be clean after another user leave")
+            }
+            else{
+                delete gamePool[gameId]
+                resolve("The game"+gameId+"is cleaned")
+            }
+        }catch(err){
+            reject(err)
+        }
+    })
+}
+
+module.exports = {createGame,placeStone,summaryGame}

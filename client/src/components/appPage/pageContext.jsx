@@ -15,6 +15,10 @@ const PageProvider = ({children}) => {
       setPage(1);
     };
 
+    function returnToHome(){
+      setPage(1)
+    }
+
     function logout(){
       setPage(0);
     }
@@ -39,7 +43,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color }}>  
+        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome}}>  
           {children}  
         </PageContext.Provider>  
       );  

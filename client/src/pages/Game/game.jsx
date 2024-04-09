@@ -1,6 +1,7 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect,useContext} from 'react'
 import {useGameSocket} from '../../contexts/GameSocketProvider'
 import {Modal,Button} from 'react-bootstrap';
+import {PageContext} from '../../components/appPage/pageContext'
 
 import './game.css'
 
@@ -32,8 +33,8 @@ export default function Game({color}){
   const [history,setHistory] = useState([Array(361).fill(null)]);
   const [currentMove,setCurrentMove] = useState(0);
   const [winner,setWinner] = useState(null)
+  const {returnToHome} = useContext(PageContext)
   const currentSquares = history[currentMove];
-  
   useEffect(() => {
     if (socket == null) return
 
@@ -51,7 +52,17 @@ export default function Game({color}){
   }, [socket,history,currentMove])
 
   function summaryGame(){
+    socket.emit('summary-game',winner)
+    returnToHome()
+  }
 
+  function placeStone(i){
+    // xIsNext means black is next, in which player white color=true === xIsNext
+    if(currentSquares[i]||color===xIsNext){
+      return;
+    }
+    console.log(i)
+    socket.emit('place-stone',i)
   }
   //function jumpTo(nextMove){
   //  setCurrentMove(nextMove)
@@ -76,27 +87,22 @@ export default function Game({color}){
     <div className='game'>
       <div className="status">{status}</div>
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} playerColor={color} socket={socket}/>
+        <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone}/>
       </div>
       <div className="game-info">
         <Button>Rectract</Button>
       </div>
       <Modal show={winner}>
-        <GameEndModal summaryGame={summaryGame} winner={winner}/>
+        <GameEndModal summaryGame={()=>summaryGame(winner)} winner={winner}/>
       </Modal>
     </div>
   );
 }
 
-function Board({xIsNext,squares,playerColor,socket}) {
+function Board({xIsNext,squares,placeStone}) {
 
   function handleClick(i){
-    // xIsNext means black is next, in which player white color=true === xIsNext
-    if(squares[i]||playerColor===xIsNext){
-      return;
-    }
-    console.log(i)
-    socket.emit('place-stone',i)
+    placeStone(i)
   }
 
   const rowsArray = [];

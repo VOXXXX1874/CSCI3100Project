@@ -12,7 +12,7 @@ var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions,states} = require('../controllers/loginCtrl')
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
-const {createGame,placeStone} = require('../controllers/gameCtrl')
+const {createGame,placeStone,summaryGame} = require('../controllers/gameCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -183,8 +183,20 @@ game_io.on('connection', (socket) => {
     }).catch((err)=>{
       console.log(err)
     })
-
   })
+
+  socket.on('summary-game',(winner)=>{
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    console.log("Player", sessions[sessionId].username, "leave this game")
+    summaryGame(sessions[sessionId].username,winner).then((result)=>{
+      console.log(result)
+    }).catch((error)=>{
+      console.log(error)
+    })
+  })
+
 })
 
 /**
