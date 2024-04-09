@@ -1,9 +1,10 @@
 import React, {useState,useEffect,useContext} from 'react'
 import {useGameSocket} from '../../contexts/GameSocketProvider'
+import { useConversations } from '../../contexts/ConversationsProvider';
 import {Modal,Button} from 'react-bootstrap';
 import {PageContext} from '../../components/appPage/pageContext'
-
 import './game.css'
+import OpenConversation from '../../components/OpenConversation';
 
 // Please refer to the React Tic Tac Toe tutorial. I might write some comment later.
 
@@ -45,6 +46,7 @@ export default function Game({color}){
   const [receiveRetraction, setReceiveRetraction] = useState(false)
   const [currentMove,setCurrentMove] = useState(0);
   const currentSquares = history[currentMove];
+  const { createConversation, selectConversationIndex, returnConversationIndex } = useConversations()
 
   useEffect(() => {
     if (socket == null) return
@@ -61,6 +63,21 @@ export default function Game({color}){
 
     return () => socket.off('handle-play')
   }, [socket,history,currentMove])
+
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('create-game-chat', (opponent) =>{
+      console.log(opponent)
+      createConversation([opponent])
+      let conversationIndex = returnConversationIndex(opponent)
+      console.log('conversation index: ', conversationIndex)
+      selectConversationIndex(conversationIndex)
+    })
+
+    return () => socket.off('create-game-chat')
+  }, [socket, createConversation, selectConversationIndex, returnConversationIndex])
+
 
   function summaryGame(){
     socket.emit('summary-game',winner)
@@ -126,6 +143,9 @@ export default function Game({color}){
       </div>
       <div className="game-info">
         <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
+      </div>
+      <div className='chat'>
+        <OpenConversation/>
       </div>
       <Modal show={winner}>
         <GameEndModal summaryGame={()=>summaryGame(winner)} winner={winner}/>

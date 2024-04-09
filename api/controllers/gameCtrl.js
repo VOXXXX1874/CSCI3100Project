@@ -11,6 +11,15 @@ async function createGame(match){
     console.log("states:",states)
 }
 
+async function getOpponent(username){
+    console.log('getOpponent')
+    gameId = states[username].game
+    if (gamePool[gameId].playerBlack === username){
+        return gamePool[gameId].playerWhite
+    } 
+    return gamePool[gameId].playerBlack
+}
+
 async function placeStone(username,place){
     return new Promise((resolve,reject)=>{
         try{
@@ -110,4 +119,4 @@ async function responseRetractRequest(username,message){
     })
 }
 
-module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest}
+module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent}

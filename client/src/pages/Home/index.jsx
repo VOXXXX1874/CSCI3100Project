@@ -60,9 +60,6 @@ export default function HomePage(){
                   <Col>
                     <OpenConversation/>
                   </Col>
-                </ConversationsProvider>
-              </ContactsProvider>
-              </SocketProvider>
             <Col>
                 <div className="ButtonsContainer">
                     {/* <button className="PageButton" onClick={handleStartGame}>Game</button>
@@ -85,6 +82,9 @@ export default function HomePage(){
                 </button>
               </div>
             </Col>
+                </ConversationsProvider>
+                </ContactsProvider>
+              </SocketProvider>
             </Row>
         </Container>
     </div>

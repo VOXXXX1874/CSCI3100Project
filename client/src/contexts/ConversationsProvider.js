@@ -17,9 +17,24 @@ export function ConversationsProvider({ id, children }) {
   // createConversation: 
   // Allows users to create conversation
   function createConversation(recipients) {
+    console.log("CREATING CONVERSATION with", recipients)
     setConversations(prevConversations => {
       return [...prevConversations, { recipients, messages: [] }]
     })
+  }
+
+  // returnConversationIndex: 
+  // returns index of a conversation based off of recipients
+  function returnConversationIndex(recipients){
+    console.log(conversations)
+    conversations.forEach((conversation, index) => {
+      console.log(`conversation: ${conversation}, Index: ${index}`);
+      if (conversation.recipients === recipients){
+        console.log(recipients)
+        return index
+      }
+    });
+    return conversations.length > 0 ? conversations.length - 1 : 0;
   }
 
   // addMessageToConversation: 
@@ -27,6 +42,7 @@ export function ConversationsProvider({ id, children }) {
   // new message to the existing conversation. If the conversation does not already exist, it will greate a new conversation object
   // with the desired recipients and new message
   const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
+    console.log(conversations)
     console.log(text)
     setConversations(prevConversations => {
       let madeChange = false
@@ -109,7 +125,8 @@ export function ConversationsProvider({ id, children }) {
     selectedConversation: formattedConversations[selectedConversationIndex],
     sendMessage,
     selectConversationIndex: setSelectedConversationIndex,
-    createConversation
+    createConversation,
+    returnConversationIndex
   }
 
   return (
