@@ -4,14 +4,27 @@ import "./index.css"
 
 
 export default function CreateAccountPage(){
-    // const { login, createAccount } = useContext(PageContext);
     const { returnToSignIn } = useContext(PageContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
 
-    function handleSubmit (){
-        console.log('test');
-    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (password !== confirmPassword) {
+            setError("Passwords don't match");
+            return;
+        }
+
+        console.log('Username:', username);
+        console.log('Password:', password);
+        console.log('Confirm Password:', confirmPassword);
+
+        // Redirect to sign-in page if passwords match
+        returnToSignIn();
+    };
 
     // const handleCreateAccount = async (event) => {
     //     event.preventDefault();
@@ -57,7 +70,6 @@ export default function CreateAccountPage(){
         <div className="creatAccountContainer">
             <h1>Create an account</h1>
             <a style={{ display: 'inline' }}>Already have an account?</a>
-            {/* <p style={{ display: 'inline' }} className="signUpText" > Sign in</p> */}
             <p style={{ display: 'inline' }} className="signUpText" onClick={handleReturnToSignIn}> Sign in</p>
             <form onSubmit={handleSubmit} className="createAccountForm">
                 <div className="inputContainer">
@@ -79,18 +91,17 @@ export default function CreateAccountPage(){
                     />
                 </div>
                 <div className="inputContainer">
-                    <label htmlFor="password">Confirm Password</label>
+                    <label htmlFor="confirmPassword">Confirm Password</label>
                     <input
                         type="password"
-                        id="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        id="confirmPassword"
+                        value={confirmPassword}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
                     />
                 </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button type="submit" className="createAccountButton">CREATE ACCOUNT</button>
             </form>
         </div>
-        
     );
-
 }
