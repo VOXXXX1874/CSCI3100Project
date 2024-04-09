@@ -4,7 +4,8 @@ import "./index.css"
 
 
 export default function CreateAccountPage(){
-    const { login, createAccount } = useContext(PageContext);
+    // const { login, createAccount } = useContext(PageContext);
+    const { returnToSignIn } = useContext(PageContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -47,10 +48,17 @@ export default function CreateAccountPage(){
     //         // Optionally, handle error scenarios, e.g., display an error message to the user
     //     }
     // }
+
+    function handleReturnToSignIn() {
+        returnToSignIn();
+    }
     
     return(
         <div className="creatAccountContainer">
             <h1>Create an account</h1>
+            <a style={{ display: 'inline' }}>Already have an account?</a>
+            {/* <p style={{ display: 'inline' }} className="signUpText" > Sign in</p> */}
+            <p style={{ display: 'inline' }} className="signUpText" onClick={handleReturnToSignIn}> Sign in</p>
             <form onSubmit={handleSubmit} className="createAccountForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>

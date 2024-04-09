@@ -1,11 +1,19 @@
-.creatAccountContainer {
-    width: 100%;
+html, body {
     height: 100%;
-    max-width: 320px;
-    margin: auto;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.creatAccountContainer {
+    width: 620px;
+    height: auto;
+    max-width: 100%;
     padding: 50px;
     box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     border-radius: 4px;
+    overflow-x: hidden;
 }
 
 h1 {
