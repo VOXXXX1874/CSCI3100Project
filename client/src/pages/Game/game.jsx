@@ -8,8 +8,9 @@ import OpenConversation from '../../components/OpenConversation';
 
 // Please refer to the React Tic Tac Toe tutorial. I might write some comment later.
 
-function Square({value,onSquareClick,xIsNext}){
+function Square({value,onSquareClick,xIsNext,playerColor}){
   const [isHovered,setIsHovered] = useState(false);
+  let SquaresMap = null
 
   const handleMouseEnter = ()=>{
     setIsHovered(true);
@@ -17,13 +18,20 @@ function Square({value,onSquareClick,xIsNext}){
   const handleMouseLeave = ()=>{
     setIsHovered(false);
   }
-
-  const SquaresMap = {
-    null:<button className={`square ${isHovered ? 'hovered' : ''} ${xIsNext ? 'HX':'HO'}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={onSquareClick}></button>,
-    "X": <button className="square X" onMouseLeave={handleMouseLeave}></button>,
-    "O": <button className="square O" onMouseLeave={handleMouseLeave}></button>,
+  if(playerColor!==xIsNext){
+    SquaresMap = {
+      null:<button className={`square ${isHovered ? 'hovered' : ''} ${xIsNext ? 'HX':'HO'}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={onSquareClick}></button>,
+      "X": <button className="square X" onMouseLeave={handleMouseLeave}></button>,
+      "O": <button className="square O" onMouseLeave={handleMouseLeave}></button>,
+    }
   }
-
+  else{
+    SquaresMap = {
+      null:<button className="square" onMouseLeave={handleMouseLeave}></button>,
+      "X": <button className="square X" onMouseLeave={handleMouseLeave}></button>,
+      "O": <button className="square O" onMouseLeave={handleMouseLeave}></button>,
+    }
+  } 
   return SquaresMap[value];
 }
   
@@ -32,9 +40,11 @@ export default function Game({color}){
   const socket = useGameSocket()
   const [xIsNext,setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(361).fill(null)]);
-  const [currentMove,setCurrentMove] = useState(0);
   const [winner,setWinner] = useState(null)
   const {returnToHome} = useContext(PageContext)
+  const [hasRetraction,setHasRetraction] = useState(false)
+  const [receiveRetraction, setReceiveRetraction] = useState(false)
+  const [currentMove,setCurrentMove] = useState(0);
   const currentSquares = history[currentMove];
   const { createConversation, selectConversationIndex, returnConversationIndex } = useConversations()
 
@@ -42,13 +52,13 @@ export default function Game({color}){
     if (socket == null) return
 
     socket.on('handle-play', (place,player)=>{
-      let nextSquares = history[history.length-1]
+      let nextSquares = history[currentMove].slice()
       nextSquares[place] = player? "O":"X"
       setXIsNext(player)
       const nextHistory = [...history.slice(0,currentMove+1),nextSquares];
-      setHistory(nextHistory);
+      setHistory(nextHistory)
       setCurrentMove(nextHistory.length-1)
-      setWinner(calculateWinner(history[currentMove]))
+      setWinner(calculateWinner(nextSquares))
     })
 
     return () => socket.off('handle-play')
@@ -79,36 +89,60 @@ export default function Game({color}){
     if(currentSquares[i]||color===xIsNext){
       return;
     }
-    console.log(i)
     socket.emit('place-stone',i)
   }
-  //function jumpTo(nextMove){
-  //  setCurrentMove(nextMove)
-  //  setXIsNext(nextMove%2===0)
-  //}
-  //const moves = history.map((squares,move)=>{
-  //  let description;
-  //  if(move > 0){
-  //    description = 'Go to move #' + move;
-  //  }else{
-  //    description = 'Go to game start';
-  //  }
-  //  return (
-  //    <li key={move}>
-  //      <button onClick={()=>jumpTo(move)}>{description}</button>
-  //    </li>
-  //  )
-  //})
+
+  function retractRequest(){
+    setHasRetraction(true)
+    socket.emit('retract-request')
+  }
+
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('handle-retract-request', ()=>{
+      setReceiveRetraction(true)
+    })
+
+    return () => socket.off('handle-retract-request')
+  }, [socket])
+
+  function confirmRetractionRequest(){
+    socket.emit('response-retract-request',true)
+  }
+
+  function refuseRetractionRequest(){
+    socket.emit('response-retract-request',false)
+  }
+
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('end-retract-request', (message)=>{
+      if(message){
+        alert("The retraction is confirmed")
+        const previousMove = currentMove-2
+        setCurrentMove(previousMove)
+      }
+      else{
+        alert("The retraction is refused")
+      }
+      setHasRetraction(false)
+      setReceiveRetraction(false)
+    })
+
+    return () => socket.off('end-retract-request')
+  }, [socket,history,currentMove])
+
   let status = 'Next player: ' + (xIsNext ? 'Black':'White');
-  console.log(xIsNext)
   return(
     <div className='game'>
       <div className="status">{status}</div>
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone}/>
+        <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone} playerColor={color}/>
       </div>
       <div className="game-info">
-        <Button>Rectract</Button>
+        <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
       </div>
       <div className='chat'>
         <OpenConversation/>
@@ -116,15 +150,14 @@ export default function Game({color}){
       <Modal show={winner}>
         <GameEndModal summaryGame={()=>summaryGame(winner)} winner={winner}/>
       </Modal>
+      <Modal show={hasRetraction||receiveRetraction}>
+        <RetractModal hasRetraction={hasRetraction} receiveRetraction={receiveRetraction} confirmRetractionRequest={confirmRetractionRequest} refuseRetractionRequest={refuseRetractionRequest}/>
+      </Modal>
     </div>
   );
 }
 
-function Board({xIsNext,squares,placeStone}) {
-
-  function handleClick(i){
-    placeStone(i)
-  }
+function Board({xIsNext,squares,placeStone,playerColor}) {
 
   const rowsArray = [];
   const width =19;
@@ -133,7 +166,7 @@ function Board({xIsNext,squares,placeStone}) {
     const buttonsArray = [];
     for(let j = 0; j < width; j++){
       buttonsArray.push(
-        <Square key = {`button-${j}`} value={squares[i*width+j]} onSquareClick={() => handleClick(i*width+j)} xIsNext={xIsNext}/>
+        <Square key = {`button-${j}`} value={squares[i*width+j]} onSquareClick={() => placeStone(i*width+j)} xIsNext={xIsNext} playerColor = {playerColor}/>
       )
     }
     rowsArray.push(
@@ -200,10 +233,34 @@ function GameEndModal({summaryGame, winner}) {
   }
   return (
     <>
-      <Modal.Header closeButton>The player with {winnerColor} stone win!!!</Modal.Header>
+      <Modal.Header>The player with {winnerColor} stone win!!!</Modal.Header>
       <Modal.Body>
         <Button onClick={summaryGame}>Return to Home</Button>
       </Modal.Body>
     </>
   )
+}
+
+function RetractModal({hasRetraction,receiveRetraction,confirmRetractionRequest,refuseRetractionRequest}) {
+  if(hasRetraction){
+    return (
+      <>
+        <Modal.Header>You raise a retract request</Modal.Header>
+        <Modal.Body>
+          Please waiting for another player's confimation...
+        </Modal.Body>
+      </>
+    )
+  }
+  if(receiveRetraction){
+    return(
+      <>
+        <Modal.Header>Receive opposite's retract request</Modal.Header>
+        <Modal.Body>
+          <Button onClick={confirmRetractionRequest}>Confirm</Button>
+          <Button onClick={refuseRetractionRequest}>Refuse</Button>
+        </Modal.Body>
+      </>
+    )
+  }
 }

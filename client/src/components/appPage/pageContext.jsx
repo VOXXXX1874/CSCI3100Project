@@ -23,6 +23,10 @@ const PageProvider = ({children}) => {
       setPage(0);
     }
 
+    function returnToSignIn(){
+      setPage(0);
+    }
+
     function startGame(color){
       setColor(color)
       setPage(2);
@@ -43,7 +47,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome}}>  
+        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome}}>  
           {children}  
         </PageContext.Provider>  
       );  
