@@ -45,8 +45,8 @@ export default function LoginPage() {
         <div className="loginContainer">
             <h1>Sign in</h1>
             <a style={{ display: 'inline' }}>New user?</a>
-            <p style={{ display: 'inline' }} className="signUpText" onClick={handleCreateAccount}> Create an account</p>
-
+            <a style={{ display: 'inline' }} className="signUpText" onClick={handleCreateAccount}> Create an account</a>
+            <p></p>
             <form onSubmit={handleSubmit} className="loginForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>

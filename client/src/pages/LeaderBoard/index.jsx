@@ -23,8 +23,8 @@ export default function LeaderBoardPage(){// Example leaderboard data
     }
 
     return (
-        <div className='leaderboardContainer'>
-            <h1>Leaderboard</h1>
+        <div className="table-container"> {/* Add this wrapper */}
+            <h1>Leaderboard</h1><p></p>
             <table>
                 <thead>
                     <tr>
@@ -39,7 +39,7 @@ export default function LeaderBoardPage(){// Example leaderboard data
                             <td>{user.name}</td>
                             <td>{user.points}</td>
                             <td>
-                                <button onClick={handleFriend}>
+                                <button onClick={() => addFriend(user.id)}>
                                     Add Friend
                                 </button>
                             </td>

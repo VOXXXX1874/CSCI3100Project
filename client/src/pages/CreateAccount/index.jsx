@@ -67,7 +67,8 @@ export default function CreateAccountPage(){
         <div className="creatAccountContainer">
             <h1>Create an account</h1>
             <a style={{ display: 'inline' }}>Already have an account?</a>
-            <p style={{ display: 'inline' }} className="signUpText" onClick={handleReturnToSignIn}> Sign in</p>
+            <a style={{ display: 'inline' }} className="signUpText" onClick={handleReturnToSignIn}> Sign in</a>
+            <p></p>
             <form onSubmit={handleSubmit} className="createAccountForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>
