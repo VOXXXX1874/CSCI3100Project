@@ -22,6 +22,8 @@ var testLoginRouter = require("./routes/testLogin")
 var loginRouter = require("./routes/login")
 // The replay router
 var replayRouter = require('./routes/replay')
+// The create account router
+var createAccountRouter = require('./routes/createAccount')
 
 var app = express();
 
@@ -62,6 +64,8 @@ app.use("/testLogin",testLoginRouter);
 app.use("/Login",loginRouter);
 // Use the replay router
 app.use("/replay",replayRouter);
+// Use the create account router
+app.use("/CreateAccount",createAccountRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
