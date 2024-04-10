@@ -5,7 +5,9 @@ var gamePool = {}
 async function createGame(match){  
     game = {playerWhite: match.player1, playerBlack:match.player2, gameState:0, gameHistory:[]}
     gamePool[match.player1+"vs"+match.player2] = game
-    states[match.player1].game=match.player1+"vs"+match.player2
+    if(match.player1!=='machine'){
+        states[match.player1].game=match.player1+"vs"+match.player2
+    }
     states[match.player2].game=match.player1+"vs"+match.player2
     console.log("game pool:",gamePool)
     console.log("states:",states)
@@ -45,7 +47,44 @@ async function placeStone(username,place){
     })
 }
 
-async function summaryGame(username,winner){
+function checkDuplication(randomNum,gameId){
+    const historyLength = gamePool[gameId].gameHistory.length
+    for(let i=historyLength-1;i>=0;i--){
+        if(gamePool[gameId].gameHistory[i].hasOwnProperty('retractStep')){
+            i+=gamePool[gameId].gameHistory[i]['retractStep']
+        }
+        else{
+            if(gamePool[gameId].gameHistory[i].hasOwnProperty('playerBlack')
+            &&gamePool[gameId].gameHistory[i]['playerBlack']===randomNum){
+                return true
+            }
+            else if(gamePool[gameId].gameHistory[i].hasOwnProperty('playerWhite')
+            &&gamePool[gameId].gameHistory[i]['playerWhite']===randomNum){
+                return true
+            }
+        }
+    }
+    return false
+}
+
+async function randomlyPlaceStone(username){
+    return new Promise((resolve,reject)=>{
+        try{
+            const gameId = states[username].game
+            let randomNum = Math.floor(Math.random() * 361);
+            while(checkDuplication(randomNum,gameId)){
+                randomNum = Math.floor(Math.random() * 361);
+            }
+            gamePool[gameId].gameHistory.push({playerWhite:randomNum})
+            gamePool[gameId].gameState=0
+            resolve({anotherPlayer:username,place:randomNum,color:true})
+        }catch(err){
+            reject(err)
+        }
+    })
+}
+
+async function summaryGame(username){
     return new Promise((resolve,reject)=>{
         try{
             const gameId = states[username].game
@@ -69,7 +108,7 @@ async function retractRequest(username){
     return new Promise((resolve,reject)=>{
         try{
             const gameId = states[username].game
-            gamePool[gameId].gameState=3
+            gamePool[gameId].gameState= gamePool[gameId].playerWhite==='machine'? 0:3
             if(gamePool[gameId].playerBlack === username){
                 resolve(gamePool[gameId].playerWhite)
             }
@@ -119,4 +158,4 @@ async function responseRetractRequest(username,message){
     })
 }
 
-module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent}
+module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent,randomlyPlaceStone}

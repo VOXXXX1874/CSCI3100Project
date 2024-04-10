@@ -12,7 +12,7 @@ var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions,states} = require('../controllers/loginCtrl')
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
-const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent} = require('../controllers/gameCtrl')
+const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent,randomlyPlaceStone} = require('../controllers/gameCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -107,6 +107,17 @@ match_io.on('connection',(socket)=>{
     return;
   }
 
+  socket.on('play-with-machine',() => {
+    const sessionId = socket.handshake.headers.cookie
+      ? cookie.parse(socket.handshake.headers.cookie)['session_id']
+      : null;
+    console.log("receive",sessions[sessionId].username," request for machine play")
+    cancelMatch(sessions[sessionId].username)
+    match = {player1:"machine", player2:sessions[sessionId].username}
+    console.log("Two player of this match confirm", match)
+    createGame(match)
+  })
+
   socket.on('begin-match', () => {
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
@@ -184,9 +195,23 @@ game_io.on('connection', (socket) => {
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive place stone from", sessions[sessionId].username,"place at",place)
-    placeStone(sessions[sessionId].username,place).then((result)=>{
-      game_io.to(result.anotherPlayer).emit("handle-play",place,result.color)
+    placeStone(sessions[sessionId].username,place).then(async (result)=>{
       game_io.to(sessions[sessionId].username).emit("handle-play",place,result.color)
+      if(result.anotherPlayer==='machine'){
+        function delayExecution(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        await delayExecution(1000);
+        randomlyPlaceStone(sessions[sessionId].username).then((machineResult)=>{
+          game_io.to(machineResult.anotherPlayer).emit("handle-play",machineResult.place,machineResult.color)
+        }).catch((err)=>{
+          console.log("Unknow error happen",err)
+        })
+      }
+      else{
+        game_io.to(result.anotherPlayer).emit("handle-play",place,result.color)
+      }
+      
     }).catch((err)=>{
       console.log(err)
     })
@@ -210,7 +235,12 @@ game_io.on('connection', (socket) => {
       : null;
     console.log("Player", sessions[sessionId].username, "raise retract request")
     retractRequest(sessions[sessionId].username).then((result)=>{
-      game_io.to(result).emit("handle-retract-request")
+      if(result==='machine'){
+        game_io.to(sessions[sessionId].username).emit("end-retract-request",true)
+      }
+      else{
+        game_io.to(result).emit("handle-retract-request")
+      }
     }).catch((err)=>{
       console.log(err)
     })

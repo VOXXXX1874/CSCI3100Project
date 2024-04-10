@@ -19,6 +19,13 @@ export default function StartGameButton({startGame}){
       socket.emit('cancel-match')
     }
 
+    function playWithMachine(){
+      socket.emit('play-with-machine')
+      setModalOpen(false)
+      startGame(false)
+      alert("Enjoy your game with a random machine!")
+    }
+
     useEffect(() => {
       if (socket == null) return
   
@@ -79,19 +86,20 @@ export default function StartGameButton({startGame}){
         </button>
         <Modal show={modalOpen}>
           {!findMatch?
-          <StartGameModal cancelMatch={cancelMatch}/>:
+          <StartGameModal cancelMatch={cancelMatch} playWithMachine={playWithMachine}/>:
           <ConfirmMatchModal match = {match} confirmMatch = {confirmMatch} refuseMatch = {refuseMatch} hasConfirm={hasConfirm}/>}
         </Modal>
       </div>
     )
   }
 
-  function StartGameModal({cancelMatch}) {
+  function StartGameModal({cancelMatch, playWithMachine}) {
     return (
       <>
         <Modal.Header closeButton>Please be patient, we are looking for another player...</Modal.Header>
         <Modal.Body>
           <Button onClick={cancelMatch}>Cancel Match</Button>
+          <Button onClick={playWithMachine}>Play with machine player</Button>
         </Modal.Body>
       </>
     )
