@@ -11,7 +11,7 @@ export default function ManageProfilePage(){
         <Router>
             <div className="ManageProfilePage">
                 <Header />
-                <h1>Profile</h1>
+                <h2>Profile</h2>
                 <div className="button-container">
                     <Button variant="light">
                         <img src={usernameIcon} style={{ width: '20px', height: '20px' }} /> Change username
@@ -19,6 +19,8 @@ export default function ManageProfilePage(){
                     <Button variant="light">
                         <img src={passwordIcon} style={{ width: '20px', height: '20px' }} /> Change password
                     </Button>
+                    <h2>Friends</h2>
+                    
                 </div>
             </div>
         </Router>

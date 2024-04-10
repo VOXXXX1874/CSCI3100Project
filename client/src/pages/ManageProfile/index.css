@@ -4,11 +4,19 @@
     gap: 10px;
     margin-right: 700px;
     margin-bottom: 300px;
+    width: 300px;
 }
 
-h1 {
-    font-size: 24px;
+h2 {
+    font-size: 20px;
     color: #333;
     text-align: left;
     margin-bottom: 25px;
+    gap: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    color: #333;
+    text-align: left;
 }
