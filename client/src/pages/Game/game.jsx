@@ -150,6 +150,7 @@ export default function Game({color}){
         <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone} playerColor={color}/>
       </div>
       <div className='chat'>
+        <div className='chatHeader'>In-Game Chat</div>
         <OpenConversation/>
       </div>
       <Modal show={winner}>
