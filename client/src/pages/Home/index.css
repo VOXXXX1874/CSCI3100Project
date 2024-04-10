@@ -1,7 +1,7 @@
   .ButtonsContainer {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    justify-content: center; /* Center align the buttons */
+    justify-content: center;
     gap: 20px;
   }
 
@@ -18,7 +18,6 @@
     padding: 0;
     border: none;
     background-color: transparent;
-    border: 2px solid black;
   }
   
   .ButtonContent {
@@ -35,5 +34,7 @@
     text-align: center;
     padding: 10px 0;
   }
+
+  
 
   

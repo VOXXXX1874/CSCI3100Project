@@ -46,8 +46,12 @@ const PageProvider = ({children}) => {
       setPage(6);
     }
 
+    function manageProfile(){
+      setPage(7);
+    }
+
     return (  
-        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome}}>  
+        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile}}>  
           {children}  
         </PageContext.Provider>  
       );  
