@@ -11,53 +11,53 @@ export default function CreateAccountPage(){
     const [error, setError] = useState('');
 
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (password !== confirmPassword) {
-            setError("Passwords don't match");
-            return;
-        }
-
-        console.log('Username:', username);
-        console.log('Password:', password);
-        console.log('Confirm Password:', confirmPassword);
-
-        // Redirect to sign-in page if passwords match
-        returnToSignIn();
-    };
-
-    // Vox: This is my modified create account function
-    // It is disabled by default for convenience
     //const handleSubmit = (event) => {
-    //    event.preventDefault()
+    //    event.preventDefault();
     //    if (password !== confirmPassword) {
     //        setError("Passwords don't match");
     //        return;
     //    }
-    //    fetch('http://localhost:9000/CreateAccount',{
-    //        method: 'POST',
-    //        headers:{
-    //            'Content-Type': 'application/json',
-    //        },
-    //        body: JSON.stringify({
-    //            username:username,
-    //            password:password,
-    //        }),
-    //        credentials: 'include',
-    //    }).then(response=>{
-    //        if (response.status === 200){
-    //            response.json().then(data=>{alert(data.message);})
-    //            returnToSignIn();
-    //        }
-    //        else{
-    //            response.json().then(data=>{setError(data.message)})
-    //        }
-    //    }).catch(error=>{
-    //        setError(error)
-    //        alert('For development, you can directly login without reponse from backend')
-    //        returnToSignIn();
-    //    });
-    //}
+//
+    //    console.log('Username:', username);
+    //    console.log('Password:', password);
+    //    console.log('Confirm Password:', confirmPassword);
+//
+    //    // Redirect to sign-in page if passwords match
+    //    returnToSignIn();
+    //};
+
+    // Vox: This is my modified create account function
+    // It is disabled by default for convenience
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        if (password !== confirmPassword) {
+            setError("Passwords don't match");
+            return;
+        }
+        fetch('http://localhost:9000/CreateAccount',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username:username,
+                password:password,
+            }),
+            credentials: 'include',
+        }).then(response=>{
+            if (response.status === 200){
+                response.json().then(data=>{alert(data.message);})
+                returnToSignIn();
+            }
+            else{
+                response.json().then(data=>{setError(data.message)})
+            }
+        }).catch(error=>{
+            setError(error)
+            alert('For development, you can directly login without reponse from backend')
+            returnToSignIn();
+        });
+    }
 
     function handleReturnToSignIn() {
         returnToSignIn();
