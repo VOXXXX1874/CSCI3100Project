@@ -1,9 +1,10 @@
 const {states} = require('./loginCtrl')
+const storeGameRecord = require('./dbControllers/gameRecordDbCtrl')
 
 var gamePool = {}
 
 async function createGame(match){  
-    game = {playerWhite: match.player1, playerBlack:match.player2, gameState:0, gameHistory:[]}
+    game = {playerWhite: match.player1, playerBlack:match.player2, gameState:0, gameHistory:[], startTime:new Date()}
     gamePool[match.player1+"vs"+match.player2] = game
     if(match.player1!=='machine'){
         states[match.player1].game=match.player1+"vs"+match.player2
@@ -51,7 +52,7 @@ function checkDuplication(randomNum,gameId){
     const historyLength = gamePool[gameId].gameHistory.length
     for(let i=historyLength-1;i>=0;i--){
         if(gamePool[gameId].gameHistory[i].hasOwnProperty('retractStep')){
-            i+=gamePool[gameId].gameHistory[i]['retractStep']
+            i-=gamePool[gameId].gameHistory[i]['retractStep']
         }
         else{
             if(gamePool[gameId].gameHistory[i].hasOwnProperty('playerBlack')
@@ -91,10 +92,22 @@ async function summaryGame(username){
             states[username].game = ''
             // gameState===2 means one player has left the game
             if(gamePool[gameId].gameState!=2){
+                if(gamePool[gameId].gameState==1){
+                    gamePool[gameId]['winner'] = 'playerBlack'
+                }
+                else{
+                    gamePool[gameId]['winner'] = 'playerWhite'
+                }
                 gamePool[gameId].gameState=2
                 reject("This game"+gameId+"will be clean after another user leave")
             }
             else{
+                gamePool[gameId]['endTime'] = new Date()
+                storeGameRecord(gamePool[gameId]).then((result)=>{
+
+                }).catch((err)=>{
+
+                })
                 delete gamePool[gameId]
                 resolve("The game"+gameId+"is cleaned")
             }

@@ -34,7 +34,6 @@ async function getUsername(username){
 }
 
 async function createAccount(username,password){
-    console.log(username,password)
     return new Promise((resolve,reject)=>{
         pool.getConnection((err,connection)=>{
             if(err){
@@ -42,7 +41,7 @@ async function createAccount(username,password){
                 reject(err);
             }
             else{
-                connection.query('insert into user values (?,?);',[username,password],(err,results)=>{
+                connection.query('insert into user values (?,?,?);',[username,password,0],(err,results)=>{
                     if(err){
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);

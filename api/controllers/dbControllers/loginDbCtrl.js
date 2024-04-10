@@ -33,4 +33,8 @@ async function getUserInformation(username){
     });
 }
 
+function modifyUserScore(username,operation){
+    
+}
+
 module.exports = getUserInformation;

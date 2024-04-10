@@ -11,6 +11,8 @@ const pool = mysql.createPool({
     queueLimit: 0
 })
 
+
+
 // Given the user name, this function will return te user's replays
 async function getUserReplays(username){
     return new Promise((resolve,reject) => {
@@ -20,13 +22,12 @@ async function getUserReplays(username){
                 reject(err);
             }
             else{
-                connection.query('SELECT replays FROM user WHERE Username= ? ;',[username],(err,results)=>{
+                connection.query('SELECT * FROM gamerecord;',[username],(err,results)=>{
                     if(err){
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);
                     }else{
                         console.log("DATABASE QUERY SUCCESS")
-                        console.log(results)
                         resolve(results);
                     }
                 });
