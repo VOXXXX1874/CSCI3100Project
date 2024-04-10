@@ -7,8 +7,8 @@
     background-image:url('../Game/chessboard.jpeg');
     background-repeat: no-repeat;
     background-size: 480px 480px;
-    background-position-x: -15px;
-    background-position-y: -25px;
+    background-position-x: -10px;
+    background-position-y: -10px;
 }
 
 .square.X{

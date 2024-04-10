@@ -47,7 +47,7 @@ async function modifyUserScore(username,operation){
                         reject(err);
                     }else{
                         let currentScore = results[0]['score']+operation?1:-1
-                        connection.query('Update user SET score=? WHERE Username= ? ;',[username,currentScore],(err,results)=>{
+                        connection.query('Update user SET score=? WHERE Username= ? ;',[currentScore,username],(err,results)=>{
                             if(err){
                                 console.log("DATABASE QUERY ERROR:",err);
                                 reject(err);

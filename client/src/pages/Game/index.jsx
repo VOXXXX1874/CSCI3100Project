@@ -15,13 +15,13 @@ export default function GamePage(){
       <div className="GamePage">
         <Header/>
           {color? 
-          <h3>Your stone: White</h3>: 
-          <h3>Your stone: Black</h3>}
+          <h3 className="head">Your stone: White. The start time is {new Date().toUTCString()}</h3>: 
+          <h3 className="head">Your stone: Black. The start time is {new Date().toUTCString()}</h3>}
             <GameSocketProvider id={id}>
               <SocketProvider id={id}>
                     <ContactsProvider>
                       <ConversationsProvider id={id}> 
-                        <Game color = {color}/>
+                        <Game color = {color} startTime = {new Date()}/>
                       </ConversationsProvider>
                     </ContactsProvider>
               </SocketProvider>

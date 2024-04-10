@@ -98,12 +98,26 @@ async function summaryGame(username){
                     modifyUserScore(gamePool[gameId].playerBlack,true).then((result)=>{
                         console.log(result)
                     }).catch(err=>{
-
+                        console.log(err)
                     })
-                    // !!!
+                    modifyUserScore(gamePool[gameId].playerWhite,false).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
                     gamePool[gameId]['winner'] = 'playerBlack'
                 }
                 else{
+                    modifyUserScore(gamePool[gameId].playerWhite,true).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
+                    modifyUserScore(gamePool[gameId].playerBlack,false).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
                     gamePool[gameId]['winner'] = 'playerWhite'
                 }
                 gamePool[gameId].gameState=2

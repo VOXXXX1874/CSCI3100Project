@@ -1,7 +1,7 @@
 .game {
     display: grid;
-    grid-template-columns: 100fr 1000px 100fr;
-    height: 90vh;
+    grid-template-columns: 1fr 600px 1fr;
+    height: 80vh;
     place-items: center;
 }
 
@@ -9,33 +9,38 @@
     grid-column:1;
     margin-left: 100px;
     margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .square.X{
     background-image: url('./blackstone.png');
-    background-size: 30px 30px;
+    background-size: 18px 18px;
     background-repeat: no-repeat;
 }
 
 .square.O{
     background-image: url('./whitestone.png');
-    background-size: 30px 30px;
+    background-size: 18px 18px;
     background-repeat: no-repeat;
 }
 
 .square{
     background: rgba(255,255,255,0);
     border: 0px solid #04AA6D;
-    font-size: 24px;
-    font-weight: bold;
     line-height: 34px;
     height: 29px;
     width: 34px;
 }
 
+.head{
+    text-align:center;
+}
+
 .square.hovered.HX{
     background-image: url('./blackstone.png');
-    background-size: 30px 30px;
+    background-size: 18px 18px;
     background-repeat: no-repeat;
     cursor: 'pointer';
     opacity: 0.5;
@@ -43,7 +48,7 @@
 
 .square.hovered.HO{
     background-image: url('./whitestone.png');
-    background-size: 30px 30px;
+    background-size: 18px 18px;
     background-repeat: no-repeat;
     cursor: 'pointer';
     opacity: 0.5;
@@ -59,9 +64,9 @@
     grid-column:2;
     background-image:url('./chessboard.jpeg');
     background-repeat: no-repeat;
-    background-size: 670px 670px;
-    background-position-x: -15px;
-    background-position-y: -18px;
+    background-size: 470px 475px;
+    background-position-x: -9px;
+    background-position-y: -9px;
 }
 
 .chat{

@@ -37,7 +37,7 @@ function Square({value,onSquareClick,xIsNext,playerColor}){
   return SquaresMap[value];
 }
   
-export default function Game({color}){
+export default function Game({color,startTime}){
   // x stands for black and o stands for white
   const socket = useGameSocket()
   const [xIsNext,setXIsNext] = useState(true);
@@ -144,7 +144,12 @@ export default function Game({color}){
     <div className='game'>
       <div className="status">
         {status}
-        <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
+        <div>
+          <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
+        </div>
+        <div>
+          The elapsed time is {getMinutesDifference(startTime,new Date()).toFixed(4)}
+        </div>
       </div>
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone} playerColor={color}/>
@@ -161,6 +166,12 @@ export default function Game({color}){
       </Modal>
     </div>
   );
+}
+
+function getMinutesDifference(date1, date2) {
+  let differenceInMilliseconds = Math.abs(date2 - date1);
+  let differenceInMinutes = differenceInMilliseconds / (1000 * 60);
+  return differenceInMinutes;
 }
 
 function Board({xIsNext,squares,placeStone,playerColor}) {
