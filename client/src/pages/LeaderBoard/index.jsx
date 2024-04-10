@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
+import Header from '../../components/Header/Header';
 
 export default function LeaderBoardPage(){// Example leaderboard data
     const leaderboardData = [
@@ -24,6 +25,7 @@ export default function LeaderBoardPage(){// Example leaderboard data
 
     return (
         <div className="table-container"> {/* Add this wrapper */}
+        <Header/>
             <h1>Leaderboard</h1><p></p>
             <table>
                 <thead>
