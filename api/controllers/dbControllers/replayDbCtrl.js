@@ -25,6 +25,7 @@ async function getUserReplays(username){
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);
                     }else{
+                        console.log(results)
                         console.log("DATABASE QUERY SUCCESS")
                         resolve(results);
                     }

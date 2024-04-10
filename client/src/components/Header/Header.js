@@ -3,6 +3,8 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import settingIcon from './settingIcon.png'
+import userIcon from './user.png'
+import homeIcon from './home.png'
 import { PageContext } from '../appPage/pageContext';
 import React, { useContext, useState } from 'react';
 
@@ -10,6 +12,7 @@ export default function Header() {
     const { returnToSignIn } = useContext(PageContext);
     const [fontSize, setFontSize] = useState(16);
     const { manageProfile } = useContext(PageContext);
+    const { returnToHome } = useContext(PageContext)
 
     function handleReturnToSignIn() {
         returnToSignIn();
@@ -23,14 +26,20 @@ export default function Header() {
         manageProfile();
     }
 
+    function handleReturnToHome(){
+        returnToHome();
+    }
+
     return (
         <Navbar expand="lg" className="bg-body-tertiary box" style={{ position: 'fixed', top: 0, left: 0, width: '100%' }}>
             <Container>
-                <Navbar.Brand href="#home" className="me-auto">USER</Navbar.Brand>
+            <Navbar.Brand href="#home" className="me-auto">
+            <img src={userIcon} alt="User Icon" style={{ width: '30px', height: '30px' }} />
+            </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto" >
-                        <NavDropdown title={<img src={settingIcon} alt="Settings" style={{ width: '20px', height: '20px' }} />} id="basic-nav-dropdown" 
+                        <NavDropdown title={<img src={settingIcon} alt="Settings" style={{ width: '30px', height: '30px' }} />} id="basic-nav-dropdown" 
                         className="custom-dropdown" style={{ width: '80px', marginRight: '10px' }} >
                             <NavDropdown.Item href="#action">Sound</NavDropdown.Item>
                             <NavDropdown.Item style={{ display: 'flex', alignItems: 'center' }}>
@@ -54,6 +63,9 @@ export default function Header() {
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
+                <Navbar.Brand href="#home" className="me-auto">
+                <img src={homeIcon} alt="Home Icon" onClick={handleReturnToHome} style={{ width: '30px', height: '30px' }} />
+            </Navbar.Brand>
             </Container>
             <style>{`
                 body {

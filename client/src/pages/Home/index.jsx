@@ -28,9 +28,7 @@ export default function HomePage(){
         credentials: 'include',
       }).then(response=>{
         if(response.status === 200){
-          response.json().then(data=>{alert(data.message);})
-          console.log(response)
-          pastGame()
+          response.json().then(data=>{pastGame(data.replays)})
         }
         else{
           response.json().then(data=>{alert(data.message);})

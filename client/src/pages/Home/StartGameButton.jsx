@@ -61,15 +61,15 @@ export default function StartGameButton({startGame}){
         setHasConfirm(false)
         if(message==='refuse'){
           setModalOpen(true)
-          alert("Another player refuse the match. Now you return to waiting queue")
+          alert("Another player has refused the match. Return to queue")
         }
         else if(message==='accept-white'){
           startGame(true)
-          alert("Both players confirm! Game start!")
+          alert("Both players have confirmed! Game start!")
         }
         else if(message==='accept-black'){
           startGame(false)
-          alert("Both players confirm! Game start!")
+          alert("Both players have confirmed! Game start!")
         }
       })
   

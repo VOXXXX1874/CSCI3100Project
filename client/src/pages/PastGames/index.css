@@ -1,0 +1,30 @@
+.board {
+    grid-column:2;
+    background-image:url('../Game/chessboard.jpeg');
+    background-repeat: no-repeat;
+    background-size: 480px 480px;
+    background-position-x: -15px;
+    background-position-y: -25px;
+}
+
+.square.X{
+    background-image: url('../Game/blackstone.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+
+.square.O{
+    background-image: url('../Game/whitestone.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+
+.square{
+    background: rgba(255,255,255,0);
+    border: 0px solid #04AA6D;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 19px;
+    width: 24px;
+}
