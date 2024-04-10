@@ -1,10 +1,11 @@
 import React,{useContext, useState} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
+import LoginPage from '../Login';
 
 
 export default function CreateAccountPage(){
-    const { login, createAccount } = useContext(PageContext);
+    const { login, createAccount, signInPage } = useContext(PageContext);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -48,9 +49,18 @@ export default function CreateAccountPage(){
     //     }
     // }
     
+    function handleSignIn() {
+        login();
+    }
     return(
         <div className="creatAccountContainer">
-            <h1>Create an account</h1>
+            <h1>Create Account</h1>
+
+            <p></p>
+            <a>Already have an account? </a>
+            <a className="signUpText" onClick={handleSignIn}>Sign in</a>
+            <p></p>
+
             <form onSubmit={handleSubmit} className="createAccountForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>

@@ -46,9 +46,10 @@ export default function LoginPage() {
     return (
         <div className="loginContainer">
             <h1>Sign in</h1>
-            <a>New user?</a>
-            <p className="signUpText" onClick={handleCreateAccount}> Create an account</p>
-
+            <p></p>
+            <a>New user? </a>
+            <a className="signUpText" onClick={handleCreateAccount}>Create an account</a>
+            <p></p>
             <form onSubmit={handleSubmit} className="loginForm">
                 <div className="inputContainer">
                     <label htmlFor="username">Username</label>
