@@ -1,0 +1,45 @@
+/*.leaderboardContainer {
+    width: 620px;
+    height: auto;
+    max-width: 100%;
+    padding: 50px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    overflow-x: hidden;
+    border-collapse: collapse; 
+    text-align: left;  
+
+}*/
+
+.table-container {
+    display: block;
+    width: 620px;
+    max-width: 100%;
+    padding: 50px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    overflow-x: hidden;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed; /* This ensures that all columns are of equal width */
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: middle;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
