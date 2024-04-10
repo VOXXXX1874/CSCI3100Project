@@ -6,15 +6,17 @@ import {PageContext} from '../../components/appPage/pageContext'
 import { ContactsProvider } from '../../contexts/ContactsProvider';
 import { ConversationsProvider } from '../../contexts/ConversationsProvider';
 import { SocketProvider } from '../../contexts/SocketProvider.js'
+import Header from '../../components/Header/Header.js'
 
 export default function GamePage(){
   const {id,color} = useContext(PageContext);
 
   return(
       <div className="GamePage">
+        <Header/>
           {color? 
-          <h3>You are player with white stone</h3>: 
-          <h3>You are player with black stone</h3>}
+          <h3>Your stone: White</h3>: 
+          <h3>Your stone: Black</h3>}
             <GameSocketProvider id={id}>
               <SocketProvider id={id}>
                     <ContactsProvider>

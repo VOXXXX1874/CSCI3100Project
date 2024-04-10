@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import settingIcon from './settingIcon.png'
 import userIcon from './user.png'
+import homeIcon from './home.png'
 import { PageContext } from '../appPage/pageContext';
 import React, { useContext, useState } from 'react';
 
@@ -11,6 +12,7 @@ export default function Header() {
     const { returnToSignIn } = useContext(PageContext);
     const [fontSize, setFontSize] = useState(16);
     const { manageProfile } = useContext(PageContext);
+    const { returnToHome } = useContext(PageContext)
 
     function handleReturnToSignIn() {
         returnToSignIn();
@@ -22,6 +24,10 @@ export default function Header() {
 
     function handleManageProfile() {
         manageProfile();
+    }
+
+    function handleReturnToHome(){
+        returnToHome();
     }
 
     return (
@@ -57,6 +63,9 @@ export default function Header() {
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
+                <Navbar.Brand href="#home" className="me-auto">
+                <img src={homeIcon} alt="Home Icon" onClick={handleReturnToHome} style={{ width: '30px', height: '30px' }} />
+            </Navbar.Brand>
             </Container>
             <style>{`
                 body {
