@@ -22,11 +22,12 @@ async function getUserReplays(username){
                 reject(err);
             }
             else{
-                connection.query('SELECT * FROM gamerecord;',[username],(err,results)=>{
+                connection.query("SELECT * FROM gamerecord WHERE playerBlack = ? OR playerWhite = ?",[username, username],(err,results)=>{
                     if(err){
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);
                     }else{
+                        console.log(results)
                         console.log("DATABASE QUERY SUCCESS")
                         resolve(results);
                     }
