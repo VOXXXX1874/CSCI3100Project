@@ -12,7 +12,6 @@ export default function GamePage(){
 
   return(
       <div className="GamePage">
-          <h2>This is Game page</h2>
           {color? 
           <h3>You are player with white stone</h3>: 
           <h3>You are player with black stone</h3>}

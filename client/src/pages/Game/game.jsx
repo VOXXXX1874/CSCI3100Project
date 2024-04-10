@@ -134,15 +134,15 @@ export default function Game({color}){
     return () => socket.off('end-retract-request')
   }, [socket,history,currentMove])
 
-  let status = 'Next player: ' + (xIsNext ? 'Black':'White');
+  let status = 'Current player: ' + (xIsNext ? 'Black':'White');
   return(
     <div className='game'>
-      <div className="status">{status}</div>
+      <div className="status">
+        {status}
+        <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
+      </div>
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} placeStone={placeStone} playerColor={color}/>
-      </div>
-      <div className="game-info">
-        <Button onClick={retractRequest} disabled={color===xIsNext}>Rectract</Button>
       </div>
       <div className='chat'>
         <OpenConversation/>
