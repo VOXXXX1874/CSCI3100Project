@@ -91,7 +91,9 @@ export default function Game({color}){
     if(currentSquares[i]||color===xIsNext){
       return;
     }
-    document.getElementById('audio').play();
+    if (document.getElementById('audio')){
+      document.getElementById('audio').play();
+    }
     socket.emit('place-stone',i)
   }
 
@@ -229,7 +231,9 @@ function calculateWinner(squares) {
 }
 
 function GameEndModal({summaryGame, winner}) {
-  document.getElementById('endAudio').play();
+  if (document.getElementById('endAudio')){
+    document.getElementById('endAudio').play();
+  }
   let winnerColor = null
   if(winner==="X"){
     winnerColor = "black"
