@@ -11,6 +11,7 @@ import OpenConversation from '../../components/OpenConversation';
 import { SocketProvider } from '../../contexts/SocketProvider'
 import { MatchSocketProvider } from '../../contexts/MatchSocketProvider'
 import StartGameButton from './StartGameButton'
+import Header from '../../components/Header/Header';
 
 export default function HomePage(){
     const {logout, startGame, modifySettings, pastGame, leaderBoard, id } = useContext(PageContext);
@@ -46,10 +47,10 @@ export default function HomePage(){
     // Therefore I change all the onsubmit event to the handle function.
     return(
         <div className="HomePage">
-            <h2>This is Home page</h2>
-        <Container>
-          <Row>
-            <SocketProvider id={id}>
+          <Header></Header>
+        {/* <Container>
+          <Row> */}
+            {/* <SocketProvider id={id}>
               <ContactsProvider>
                 <ConversationsProvider id={id}> 
                   <Col>
@@ -60,11 +61,12 @@ export default function HomePage(){
                   <Col>
                     <OpenConversation/>
                   </Col>
-            <Col>
+
+                </ConversationsProvider>
+              </ContactsProvider>
+            //   </SocketProvider> */}
+            {/* // <Col> */}
                 <div className="ButtonsContainer">
-                    {/* <button className="PageButton" onClick={handleStartGame}>Game</button>
-                    <button className="PageButton" onClick={handleSettings}>Settings</button>
-                    <button className="PageButton" onClick={handleLogout}>Logout</button> */}
                   <MatchSocketProvider id = {id}>
                   <StartGameButton startGame = {startGame}/>
                   </MatchSocketProvider>
@@ -81,12 +83,10 @@ export default function HomePage(){
                   </div>
                 </button>
               </div>
-            </Col>
-                </ConversationsProvider>
-                </ContactsProvider>
-              </SocketProvider>
+            {/* </Col>
+
             </Row>
-        </Container>
+        </Container> */}
     </div>
   );
 }

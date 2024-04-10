@@ -8,6 +8,7 @@ import PastGamesPage from './pages/PastGames';
 import LeaderBoardPage from './pages/LeaderBoard';
 import "./App.css"
 import CreateAccountPage from './pages/CreateAccount';
+import ManageProfilePage from './pages/ManageProfile';
 
 
 // Map different page context to different pages so that the application knows which page to show.
@@ -18,7 +19,8 @@ const PagesMap = {
   3:<SettingsPage/>,
   4:<PastGamesPage/>,
   5:<LeaderBoardPage/>,
-  6:<CreateAccountPage/>
+  6:<CreateAccountPage/>,
+  7:<ManageProfilePage/>
 }
 
 export default function App(){
