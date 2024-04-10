@@ -1,10 +1,12 @@
-import React, {useState,useEffect,useContext} from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {useGameSocket} from '../../contexts/GameSocketProvider'
 import { useConversations } from '../../contexts/ConversationsProvider';
 import {Modal,Button} from 'react-bootstrap';
 import {PageContext} from '../../components/appPage/pageContext'
 import './game.css'
 import OpenConversation from '../../components/OpenConversation';
+import pingSound from './ping.mp3';
+import endSound from './end.mp3';
 
 // Please refer to the React Tic Tac Toe tutorial. I might write some comment later.
 
@@ -89,6 +91,7 @@ export default function Game({color}){
     if(currentSquares[i]||color===xIsNext){
       return;
     }
+    document.getElementById('audio').play();
     socket.emit('place-stone',i)
   }
 
@@ -178,6 +181,8 @@ function Board({xIsNext,squares,placeStone,playerColor}) {
   
   return (
     <>
+    <audio id="audio"><source src={pingSound} type="audio/mp3"></source></audio>
+    <audio id="endAudio"><source src={endSound} type="audio/mp3"></source></audio>
     {rowsArray}
     </>
   );
@@ -224,6 +229,7 @@ function calculateWinner(squares) {
 }
 
 function GameEndModal({summaryGame, winner}) {
+  document.getElementById('endAudio').play();
   let winnerColor = null
   if(winner==="X"){
     winnerColor = "black"
@@ -233,7 +239,7 @@ function GameEndModal({summaryGame, winner}) {
   }
   return (
     <>
-      <Modal.Header>The player with {winnerColor} stone win!!!</Modal.Header>
+      <Modal.Header>The {winnerColor} side wins!</Modal.Header>
       <Modal.Body>
         <Button onClick={summaryGame}>Return to Home</Button>
       </Modal.Body>
