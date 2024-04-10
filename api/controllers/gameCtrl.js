@@ -1,5 +1,6 @@
 const {states} = require('./loginCtrl')
 const storeGameRecord = require('./dbControllers/gameRecordDbCtrl')
+const {modifyUserScore} = require('./dbControllers/loginDbCtrl')
 
 var gamePool = {}
 
@@ -91,22 +92,32 @@ async function summaryGame(username){
             const gameId = states[username].game
             states[username].game = ''
             // gameState===2 means one player has left the game
+            // The random player case should be considered, but seems it is ok to leave it here
             if(gamePool[gameId].gameState!=2){
                 if(gamePool[gameId].gameState==1){
+                    modifyUserScore(gamePool[gameId].playerBlack,true).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+
+                    })
+                    // !!!
                     gamePool[gameId]['winner'] = 'playerBlack'
                 }
                 else{
                     gamePool[gameId]['winner'] = 'playerWhite'
                 }
                 gamePool[gameId].gameState=2
+                if(gamePool[gameId].playerWhite==='machine'){
+                    delete gamePool[gameId]
+                }
                 reject("This game"+gameId+"will be clean after another user leave")
             }
             else{
                 gamePool[gameId]['endTime'] = new Date()
                 storeGameRecord(gamePool[gameId]).then((result)=>{
-
+                    resolve(result)
                 }).catch((err)=>{
-
+                    reject(err)
                 })
                 delete gamePool[gameId]
                 resolve("The game"+gameId+"is cleaned")

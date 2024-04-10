@@ -33,8 +33,33 @@ async function getUserInformation(username){
     });
 }
 
-function modifyUserScore(username,operation){
-    
+async function modifyUserScore(username,operation){
+    return new Promise((resolve,reject) => {
+        pool.getConnection((err,connection)=>{
+            if(err){
+                console.log("DATABASE CONNECTION ERROR:",err);
+                reject(err);
+            }
+            else{
+                connection.query('SELECT score FROM user WHERE Username= ? ;',[username],(err,results)=>{
+                    if(err){
+                        console.log("DATABASE QUERY ERROR:",err);
+                        reject(err);
+                    }else{
+                        let currentScore = results[0]['score']+operation?1:-1
+                        connection.query('Update user SET score=? WHERE Username= ? ;',[username,currentScore],(err,results)=>{
+                            if(err){
+                                console.log("DATABASE QUERY ERROR:",err);
+                                reject(err);
+                            }else{
+                                resolve(results);
+                            }
+                        });
+                    }
+                });
+            }
+        })
+    });
 }
 
-module.exports = getUserInformation;
+module.exports = {getUserInformation,modifyUserScore};

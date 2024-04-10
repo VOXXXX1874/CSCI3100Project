@@ -29,7 +29,7 @@ function test(){
           winner: 'playerBlack',
           finalGoBoard: finalGoBoard
         }
-      ]
+    ]
 }
 
 // This controller is called by the router, ask database controller for user information, and send the user information back
@@ -38,8 +38,8 @@ async function accessReplays(req,res){
     const {username} = req.body;
     console.log(req.body)
     console.log('Username:',username);
-    resFromDb = await test()
-    console.log('response from db:',resFromDb)
+    resFromDb = await getUserReplays(username)
+    console.log('response from db:',resFromDb[0].gameId)
     // Send a success response along with the database response
     res.status(200).json({ message: 'Successfully accessed replays', replays: resFromDb });}
 
