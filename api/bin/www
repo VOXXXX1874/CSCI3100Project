@@ -12,7 +12,7 @@ var cookie = require('cookie')
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions,states} = require('../controllers/loginCtrl')
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
-const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest} = require('../controllers/gameCtrl')
+const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent} = require('../controllers/gameCtrl')
 
 /**
  * Get port from environment and store in Express.
@@ -165,6 +165,14 @@ game_io.on('connection', (socket) => {
      && sessions[sessionId].username == id){
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to game socket")
+    getOpponent(sessions[sessionId].username).then((opponent)=>{
+      console.log('getOpponent inside www')
+      console.log(opponent)
+      game_io.to(sessions[sessionId].username).emit('create-game-chat', opponent)
+    }).catch((err)=>{
+      console.log(err)
+    })
+    console.log("CREATING CHAT FOR", sessions[sessionId].username)
   }
   else{
     socket.disconnect(true, 'Unauthorized');

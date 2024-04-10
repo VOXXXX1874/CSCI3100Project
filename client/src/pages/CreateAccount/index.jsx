@@ -26,41 +26,38 @@ export default function CreateAccountPage(){
         returnToSignIn();
     };
 
-    // const handleCreateAccount = async (event) => {
-    //     event.preventDefault();
-    
-    //     // Obtain form input values
-    //     const username = document.getElementById('username').value;
-    //     const password = document.getElementById('password').value;
-    
-    //     try {
-    //         const response = await fetch('http://localhost:9000/CreateAccount', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 username: username,
-    //                 password: password,
-    //             }),
-    //             credentials: 'include',
-    //         });
-    
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             alert(data.message);
-    //             // Optionally, automatically log in the user after creating the account
-    //             login(username);
-    //         } else {
-    //             const data = await response.json();
-    //             alert(data.message);
-    //         }
-    //     } catch (error) {
-    //         alert(error);
-    //         alert('For development, you can directly create an account without response from backend');
-    //         // Optionally, handle error scenarios, e.g., display an error message to the user
-    //     }
-    // }
+    // Vox: This is my modified create account function
+    // It is disabled by default for convenience
+    //const handleSubmit = (event) => {
+    //    event.preventDefault()
+    //    if (password !== confirmPassword) {
+    //        setError("Passwords don't match");
+    //        return;
+    //    }
+    //    fetch('http://localhost:9000/CreateAccount',{
+    //        method: 'POST',
+    //        headers:{
+    //            'Content-Type': 'application/json',
+    //        },
+    //        body: JSON.stringify({
+    //            username:username,
+    //            password:password,
+    //        }),
+    //        credentials: 'include',
+    //    }).then(response=>{
+    //        if (response.status === 200){
+    //            response.json().then(data=>{alert(data.message);})
+    //            returnToSignIn();
+    //        }
+    //        else{
+    //            response.json().then(data=>{setError(data.message)})
+    //        }
+    //    }).catch(error=>{
+    //        setError(error)
+    //        alert('For development, you can directly login without reponse from backend')
+    //        returnToSignIn();
+    //    });
+    //}
 
     function handleReturnToSignIn() {
         returnToSignIn();

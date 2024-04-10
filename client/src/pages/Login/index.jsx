@@ -34,9 +34,7 @@ export default function LoginPage() {
             alert(error);
             alert('For development, you can directly login without reponse from backend')
             login(username)
-        });
-
-        
+        }); 
     }
 
     function handleCreateAccount() {

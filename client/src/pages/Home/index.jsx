@@ -61,6 +61,7 @@ export default function HomePage(){
                   <Col>
                     <OpenConversation/>
                   </Col>
+
                 </ConversationsProvider>
               </ContactsProvider>
             //   </SocketProvider> */}
@@ -83,6 +84,7 @@ export default function HomePage(){
                 </button>
               </div>
             {/* </Col>
+
             </Row>
         </Container> */}
     </div>
