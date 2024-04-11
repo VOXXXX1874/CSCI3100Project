@@ -90,6 +90,9 @@ export default function PastGamesPage(){// Example leaderboard data
                     <p>
                         Start time: {(new Date(modalData.startTime)).toLocaleString()}
                     </p>
+                    <p>
+                        Elapsed time: {(modalData.elapsedTime)}
+                    </p>
                 </div>
             </Modal.Body>
             <Modal.Footer>

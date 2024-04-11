@@ -40,7 +40,7 @@ export default function App(){
   return(
       <div className="App">
         {PagesMap[page] || PagesMap[0]}
-        <p className="ApiTest">{apiResponse}</p>
+        <p className="ApiTest"></p>
       </div>
   );
 }

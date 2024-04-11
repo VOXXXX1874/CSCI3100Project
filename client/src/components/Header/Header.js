@@ -41,7 +41,6 @@ export default function Header() {
                     <Nav className="ms-auto" >
                         <NavDropdown title={<img src={settingIcon} alt="Settings" style={{ width: '30px', height: '30px' }} />} id="basic-nav-dropdown" 
                         className="custom-dropdown" style={{ width: '80px', marginRight: '10px' }} >
-                            <NavDropdown.Item href="#action">Sound</NavDropdown.Item>
                             <NavDropdown.Item style={{ display: 'flex', alignItems: 'center' }}>
                             <span style={{ marginRight: '10px' }}>Font Size</span>
                             <input 
