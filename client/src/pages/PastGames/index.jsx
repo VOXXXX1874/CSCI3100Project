@@ -22,7 +22,7 @@ export default function PastGamesPage(){// Example leaderboard data
             return (
                 <ListGroup>
                 {pastGames.map((game, index) => (
-                    <ListGroup.Item key={index} onClick={handleShow(game)}>{game.playerBlack} vs {game.playerWhite}</ListGroup.Item>
+                    <ListGroup.Item key={index} onClick={handleShow(game)}>{game.playerBlack} vs {game.playerWhite} (Game ID: {game.gameId})</ListGroup.Item>
                 ))}
                 </ListGroup>
             );
@@ -70,9 +70,11 @@ export default function PastGamesPage(){// Example leaderboard data
       }
 
     return (
-        <div className="ReplayPage">
+        <div className="PastGamesPage">
         <Header></Header>
-        <h3>Replays for {id}</h3>
+        <div className="title">
+            <h1>Past Games: {id}</h1>
+        </div>
         {renderListGroups()}
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -98,9 +100,6 @@ export default function PastGamesPage(){// Example leaderboard data
             <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
                 Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-                Save Changes
             </Button>
             </Modal.Footer>
         </Modal>
