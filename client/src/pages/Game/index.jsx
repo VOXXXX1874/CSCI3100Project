@@ -17,6 +17,7 @@ export default function GamePage(){
           {color? 
           <h3 className="head">Your stone: White. The start time is {new Date().toUTCString()}</h3>: 
           <h3 className="head">Your stone: Black. The start time is {new Date().toUTCString()}</h3>}
+          <p>Your score is {Math.floor(Math.random() * 5)} and your opponent score is {Math.floor(Math.random() * 5)}</p>
             <GameSocketProvider id={id}>
               <SocketProvider id={id}>
                     <ContactsProvider>

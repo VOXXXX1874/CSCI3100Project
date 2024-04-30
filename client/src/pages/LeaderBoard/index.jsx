@@ -5,10 +5,10 @@ import Header from '../../components/Header/Header';
 
 export default function LeaderBoardPage(){// Example leaderboard data
     const leaderboardData = [
-        { id: 1, name: 'John', points: 100 },
-        { id: 2, name: 'Alice', points: 85 },
-        { id: 3, name: 'Bob', points: 75 },
-        { id: 4, name: 'Jane', points: 60 },
+        { id: 1, name: 'Voxx', points: 3 },
+        { id: 2, name: 'Vox', points: 2 },
+        { id: 3, name: 'Lana', points: 1 },
+        { id: 4, name: 'Voxxx', points: 1 },
     ];
 
     // State to store friend IDs

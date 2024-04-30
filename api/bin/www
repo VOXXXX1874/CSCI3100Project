@@ -252,12 +252,16 @@ game_io.on('connection', (socket) => {
       : null;
     console.log("Player",sessions[sessionId].username,"response with",message? 'confirm':'refuse')
     responseRetractRequest(sessions[sessionId].username,message).then((result)=>{
-      game_io.to(result.playerWhite).emit("end-retract-request",true)
-      game_io.to(result.playerBlack).emit("end-retract-request",true)
+      if(result.result){
+        game_io.to(result.playerWhite).emit("end-retract-request",true)
+        game_io.to(result.playerBlack).emit("end-retract-request",true)
+      }
+      else{
+        game_io.to(result.playerWhite).emit("end-retract-request",false)
+        game_io.to(result.playerBlack).emit("end-retract-request",false)
+      }
     }).catch((err)=>{
       console.log(err)
-      game_io.to(result.playerWhite).emit("end-retract-request",false)
-      game_io.to(result.playerBlack).emit("end-retract-request",false)
     })
   })
 })

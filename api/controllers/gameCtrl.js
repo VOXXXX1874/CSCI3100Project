@@ -73,6 +73,13 @@ async function randomlyPlaceStone(username){
     return new Promise((resolve,reject)=>{
         try{
             const gameId = states[username].game
+
+            // If the gameId is empty, it means the game is over when the machine places stone. Return an err
+            if(!gamePool[gameId]){
+                reject("The game is over")
+                return
+            }
+
             let randomNum = Math.floor(Math.random() * 361);
             while(checkDuplication(randomNum,gameId)){
                 randomNum = Math.floor(Math.random() * 361);
@@ -94,6 +101,11 @@ async function summaryGame(username){
             // gameState===2 means one player has left the game
             // The random player case should be considered, but seems it is ok to leave it here
             if(gamePool[gameId].gameState!=2){
+                if(gamePool[gameId].playerWhite==='machine'){
+                    delete gamePool[gameId]
+                    resolve("Game with random machine player is cleaned without record")
+                    return
+                }
                 if(gamePool[gameId].gameState==1){
                     //modifyUserScore(gamePool[gameId].playerBlack,true).then((result)=>{
                     //    console.log(result)
@@ -121,9 +133,6 @@ async function summaryGame(username){
                     gamePool[gameId]['winner'] = 'playerWhite'
                 }
                 gamePool[gameId].gameState=2
-                if(gamePool[gameId].playerWhite==='machine'){
-                    delete gamePool[gameId]
-                }
                 reject("This game"+gameId+"will be clean after another user leave")
             }
             else{
@@ -180,11 +189,8 @@ async function responseRetractRequest(username,message){
                 }
                 if(message){
                     gamePool[gameId].gameHistory.push({retractStep:2})
-                    resolve({playerWhite:gamePool[gameId].playerWhite,playerBlack:gamePool[gameId].playerBlack})
                 }
-                else{
-                    reject("The opposite player "+username+" refuse the retraction")
-                }
+                resolve({playerWhite:gamePool[gameId].playerWhite,playerBlack:gamePool[gameId].playerBlack,result:message})
                 console.log(gamePool)
             }
             else{
