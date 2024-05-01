@@ -35,11 +35,11 @@ export default function CreateAccountPage(){
             return;
         }
         if (password.length < 3) {
-            setError('Password must be at least 8 characters long');
+            setError('Password must be at least 3 characters long');
             return;
         }
         if (username.length < 3) {
-            setError('Username must be at least 4 characters long');
+            setError('Username must be at least 3 characters long');
             return;
         }
         fetch('http://localhost:9000/CreateAccount',{
