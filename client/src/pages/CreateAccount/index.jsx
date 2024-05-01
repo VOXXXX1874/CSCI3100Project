@@ -34,6 +34,14 @@ export default function CreateAccountPage(){
             setError("Passwords don't match");
             return;
         }
+        if (password.length < 3) {
+            setError('Password must be at least 8 characters long');
+            return;
+        }
+        if (username.length < 3) {
+            setError('Username must be at least 4 characters long');
+            return;
+        }
         fetch('http://localhost:9000/CreateAccount',{
             method: 'POST',
             headers:{
