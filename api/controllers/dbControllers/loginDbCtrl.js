@@ -16,11 +16,13 @@ async function getUserInformation(username){
     return new Promise((resolve,reject) => {
         pool.getConnection((err,connection)=>{
             if(err){
+                connection.release();
                 console.log("DATABASE CONNECTION ERROR:",err);
                 reject(err);
             }
             else{
                 connection.query('SELECT password FROM user WHERE Username= ? ;',[username],(err,results)=>{
+                    connection.release();
                     if(err){
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);
@@ -34,6 +36,7 @@ async function getUserInformation(username){
 }
 
 async function modifyUserScore(username,operation){
+    console.log(username, " ", operation)
     return new Promise((resolve,reject) => {
         pool.getConnection((err,connection)=>{
             if(err){
@@ -43,16 +46,20 @@ async function modifyUserScore(username,operation){
             else{
                 connection.query('SELECT score FROM user WHERE Username= ? ;',[username],(err,results)=>{
                     if(err){
+                        connection.release();
                         console.log("DATABASE QUERY ERROR:",err);
                         reject(err);
                     }else{
-                        let currentScore = results[0]['score']+operation?1:-1
+                        const currentScore = results[0]['score']+(operation?1:-1)
+                        console.log("Current score is ", currentScore)
                         connection.query('Update user SET score=? WHERE Username= ? ;',[currentScore,username],(err,results)=>{
+                            connection.release();
                             if(err){
                                 console.log("DATABASE QUERY ERROR:",err);
-                                reject(err);
+                                reject('DB ERROR');
                             }else{
-                                resolve(results);
+                                console.log("Result is ", results)
+                                resolve('SUCCESS');
                             }
                         });
                     }
@@ -62,4 +69,55 @@ async function modifyUserScore(username,operation){
     });
 }
 
-module.exports = {getUserInformation,modifyUserScore};
+async function getUserScore(username){
+    return new Promise((resolve,reject) => {
+        pool.getConnection((err,connection)=>{
+            if(err){
+                connection.release();
+                console.log("DATABASE CONNECTION ERROR:",err);
+                reject(err);
+            }
+            else{
+                connection.query('SELECT score FROM user WHERE Username= ? ;',[username],(err,results)=>{
+                    connection.release();
+                    if(err){
+                        console.log("DATABASE QUERY ERROR:",err);
+                        reject(err);
+                    }else{
+                        resolve(results[0]['score'])
+                    }
+                });
+            }
+        })
+    });
+}
+
+async function getLeaderBoardScore(){
+    return new Promise((resolve,reject) => {
+        pool.getConnection((err,connection)=>{
+            if(err){
+                connection.release();
+                console.log("DATABASE CONNECTION ERROR:",err);
+                reject(err);
+            }
+            else{
+                connection.query('SELECT Username, score FROM user ORDER BY score DESC LIMIT 10;',(err,results)=>{
+                    connection.release();
+                    if(err){
+                        console.log("DATABASE QUERY ERROR:",err);
+                        reject(err);
+                    }else{
+                        const leaderboard = results.map((user,index)=>({
+                            rank: index + 1,
+                            name: user.Username,
+                            points: user.score
+                        }))
+                        resolve(leaderboard)
+                    }
+                });
+            }
+        })
+    });
+}
+
+module.exports = {getUserInformation,modifyUserScore,getUserScore,getLeaderBoardScore};

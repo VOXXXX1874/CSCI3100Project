@@ -37,7 +37,38 @@ export default function HomePage(){
     }
 
     function handleLeaderBoard(){
-      leaderBoard();
+      fetch('http://localhost:9000/LeaderBoard',{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      }).then(response=>{
+        if (response.status === 200){
+            response.json().then((data)=>{
+              leaderBoard(data.leaderBoard)
+            })
+        }
+        else{
+            response.json().then(data=>{
+              alert(data.message);
+            })
+            leaderBoard([
+                { rank: 1, name: 'Voxx', points: 3 },
+                { rank: 2, name: 'Vox', points: 2 },
+                { rank: 3, name: 'Lana', points: 1 },
+                { rank: 4, name: 'Voxxx', points: 1 },
+            ])
+        }
+      }).catch(error=>{
+        alert(error);
+        leaderBoard([
+            { rank: 1, name: 'Voxx', points: 3 },
+            { rank: 2, name: 'Vox', points: 2 },
+            { rank: 3, name: 'Lana', points: 1 },
+            { rank: 4, name: 'Voxxx', points: 1 },
+        ])
+      }); 
     }
 
     // TODO: Pass acutal ID into ConversationsProvider
@@ -74,7 +105,7 @@ export default function HomePage(){
                     <div className="ButtonText">Replay Past Games</div>
                   </div>
                 </button>
-                <button className="PageButton" onClick={handleLeaderBoard}>
+                <button className="PageButton" onClick={() => handleLeaderBoard()}>
                   <div className="ButtonContent">
                   <img src={leaderBoardImage} alt="Start Game" style={{ width: '20vw', height: '270px' }} />
                     <div className="ButtonText">Leader Board</div>

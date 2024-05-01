@@ -24,6 +24,10 @@ var loginRouter = require("./routes/login")
 var replayRouter = require('./routes/replay')
 // The create account router
 var createAccountRouter = require('./routes/createAccount')
+// The score router
+var scoreRouter = require('./routes/score')
+// The leaderboard router
+var leaderBoardRouter = require('./routes/leaderBoard')
 
 var app = express();
 
@@ -66,6 +70,10 @@ app.use("/Login",loginRouter);
 app.use("/replay",replayRouter);
 // Use the create account router
 app.use("/CreateAccount",createAccountRouter);
+// Use the score router
+app.use("/Score", scoreRouter);
+// Use the leaderBoard router
+app.use("/LeaderBoard", leaderBoardRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

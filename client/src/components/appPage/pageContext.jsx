@@ -11,6 +11,12 @@ const PageProvider = ({children}) => {
     // black color is false and white color is true
     const [color,setColor] = useState(false);
 
+    // Score of the game players
+    const [score,setScore] = useState({yourScore:0,opponentScore:0});
+
+    // Leader board data
+    const [leaderBoardData,setLeaderBoardData] = useState([]);
+
     function login(username){
       setId(username);
       setPage(1);
@@ -29,6 +35,29 @@ const PageProvider = ({children}) => {
     }
 
     function startGame(color){
+      fetch('http://localhost:9000/Score',{
+          method: 'POST',
+          headers:{
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              thisPlayer:id,
+          }),
+          credentials: 'include',
+      }).then(response=>{
+          if (response.status === 200){
+              response.json().then((data)=>{
+                setScore({yourScore:data.thisPlayerScore,opponentScore:data.theOpponentScore})
+              })
+          }
+          else{
+              response.json().then(data=>{
+                alert(data.message);
+              })
+          }
+      }).catch(error=>{
+          alert(error);
+      }); 
       setColor(color)
       setPage(2);
     }
@@ -41,7 +70,9 @@ const PageProvider = ({children}) => {
       setPastGames(games)
       setPage(4);
     }
-    function leaderBoard(){
+
+    function leaderBoard(leaderBoard){
+      setLeaderBoardData(leaderBoard)
       setPage(5);
     }
 
@@ -54,7 +85,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames}}>  
+        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames, score, leaderBoardData}}>  
           {children}  
         </PageContext.Provider>  
       );  

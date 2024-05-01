@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import "./index.css"
 import Game from './game.jsx'
 import {GameSocketProvider} from '../../contexts/GameSocketProvider'
@@ -9,15 +9,15 @@ import { SocketProvider } from '../../contexts/SocketProvider.js'
 import Header from '../../components/Header/Header.js'
 
 export default function GamePage(){
-  const {id,color} = useContext(PageContext);
+  const {id,color,score} = useContext(PageContext);
 
   return(
       <div className="GamePage">
         <Header/>
           {color? 
-          <h3 className="head">Your stone: White. The start time is {new Date().toUTCString()}</h3>: 
-          <h3 className="head">Your stone: Black. The start time is {new Date().toUTCString()}</h3>}
-          <p>Your score is {Math.floor(Math.random() * 5)} and your opponent score is {Math.floor(Math.random() * 5)}</p>
+          <h3 className="head">Your({id}) stone: White. The start time is {new Date().toUTCString()}</h3>: 
+          <h3 className="head">Your({id}) stone: Black. The start time is {new Date().toUTCString()}</h3>}
+          <p>Your score is {score.yourScore} and your opponent score is {score.opponentScore}</p>
             <GameSocketProvider id={id}>
               <SocketProvider id={id}>
                     <ContactsProvider>

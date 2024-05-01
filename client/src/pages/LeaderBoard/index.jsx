@@ -1,15 +1,11 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
 import Header from '../../components/Header/Header';
 
-export default function LeaderBoardPage(){// Example leaderboard data
-    const leaderboardData = [
-        { id: 1, name: 'Voxx', points: 3 },
-        { id: 2, name: 'Vox', points: 2 },
-        { id: 3, name: 'Lana', points: 1 },
-        { id: 4, name: 'Voxxx', points: 1 },
-    ];
+export default function LeaderBoardPage(){
+    // Get the leaderboard data from the page context
+    const {leaderBoardData} = useContext(PageContext);
 
     // State to store friend IDs
     const [friends, setFriends] = useState("");
@@ -36,7 +32,7 @@ export default function LeaderBoardPage(){// Example leaderboard data
                     </tr>
                 </thead>
                 <tbody>
-                    {leaderboardData.map(user => (
+                    {leaderBoardData.map(user => (
                         <tr key={user.id}>
                             <td>{user.name}</td>
                             <td>{user.points}</td>

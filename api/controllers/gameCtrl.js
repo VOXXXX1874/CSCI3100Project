@@ -99,7 +99,6 @@ async function summaryGame(username){
             const gameId = states[username].game
             states[username].game = ''
             // gameState===2 means one player has left the game
-            // The random player case should be considered, but seems it is ok to leave it here
             if(gamePool[gameId].gameState!=2){
                 if(gamePool[gameId].playerWhite==='machine'){
                     delete gamePool[gameId]
@@ -107,29 +106,31 @@ async function summaryGame(username){
                     return
                 }
                 if(gamePool[gameId].gameState==1){
-                    //modifyUserScore(gamePool[gameId].playerBlack,true).then((result)=>{
-                    //    console.log(result)
-                    //}).catch(err=>{
-                    //    console.log(err)
-                    //})
-                    //modifyUserScore(gamePool[gameId].playerWhite,false).then((result)=>{
-                    //    console.log(result)
-                    //}).catch(err=>{
-                    //    console.log(err)
-                    //})
+                    console.log("Modify score. PlayerBlack+ and PlayerWhite-")
+                    modifyUserScore(gamePool[gameId].playerBlack,true).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
+                    modifyUserScore(gamePool[gameId].playerWhite,false).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
                     gamePool[gameId]['winner'] = 'playerBlack'
                 }
                 else{
-                    //modifyUserScore(gamePool[gameId].playerWhite,true).then((result)=>{
-                    //    console.log(result)
-                    //}).catch(err=>{
-                    //    console.log(err)
-                    //})
-                    //modifyUserScore(gamePool[gameId].playerBlack,false).then((result)=>{
-                    //    console.log(result)
-                    //}).catch(err=>{
-                    //    console.log(err)
-                    //})
+                    console.log("Modify score. PlayerWhite+ and PlayerBlack-")
+                    modifyUserScore(gamePool[gameId].playerWhite,true).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
+                    modifyUserScore(gamePool[gameId].playerBlack,false).then((result)=>{
+                        console.log(result)
+                    }).catch(err=>{
+                        console.log(err)
+                    })
                     gamePool[gameId]['winner'] = 'playerWhite'
                 }
                 gamePool[gameId].gameState=2
@@ -202,4 +203,4 @@ async function responseRetractRequest(username,message){
     })
 }
 
-module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent,randomlyPlaceStone}
+module.exports = {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent,randomlyPlaceStone,gamePool}
