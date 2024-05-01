@@ -2,9 +2,12 @@ var express = require("express");
 var router = express.Router();
 const {verifyLoginInformation} = require("../controllers/loginCtrl")
 
-// A login router for receiving the post request. It is for testing and practicing
+/* Login to the account
+    Input: POST request to '/login' with the login information
+*/
 router.post("/",function(req,res,next){
     try{
+        // Pass the request to the controller
         verifyLoginInformation(req,res);
     }catch(error){
         console.error('Error executing query:',error);

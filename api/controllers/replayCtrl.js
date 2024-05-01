@@ -1,5 +1,6 @@
 const getUserReplays = require('../controllers/dbControllers/replayDbCtrl')
 
+// Test function to simulate the database response
 function test(){
     const finalGoBoard = Array(361).fill(null)
     finalGoBoard[30] = "X"
@@ -32,13 +33,17 @@ function test(){
     ]
 }
 
-// This controller is called by the router, ask database controller for user information, and send the user information back
+/* Function to access the replays of a user
+    Input: request that contains the username
+    Output: response that contains the message and the replays
+*/
 async function accessReplays(req,res){
     // Read the username and password from the request
     const {username} = req.body;
     console.log(req.body)
     console.log('Username:',username);
     // resFromDb = await test()
+    // Get the replay data from the database
     resFromDb = await getUserReplays(username)
     console.log('response from db:',resFromDb)
     // Send a success response along with the database response

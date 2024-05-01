@@ -1,35 +1,48 @@
 const {getUserInformation} = require('../controllers/dbControllers/loginDbCtrl')
 
-// sessions is an object to maintain all the sessions
+/* Sessions is an object to maintain the session of each online user
+    The key is the session id, the value is an object containing the authentication status and the username
+*/
 var sessions = {};
 
-// states is an object to maintain states of each online user
+/* States is an object to maintain the state of each online user
+    The key is the username, the value is an object containing the waitingMatch, match, and game properties
+    waitingMatch: a boolean value indicating whether the user is waiting for a match
+    match: the username of the opponent
+    game: the game id
+*/
 var states = {};
 
-// This controller is called by the router, ask database controller for user information, and send the user information back
+/* Function to verify the login information
+    Input: request contains username, password
+    Output: response contains a message
+*/
 async function verifyLoginInformation(req,res){
     // Read the username and password from the request
     const {username,password} = req.body;
 
-    // For convenience, any username and password will pass this function
+    // For convenience, any username and password will pass the comment out code
     //const sessionId = Math.random().toString(36).substring(7);
     //sessions[sessionId] = { authenticated: true, username: username}
     //states[username] = {waitingMatch:false, match:'', game:''}
     //res.cookie('session_id', sessionId, { maxAge: 60000, secure:true, httpOnly:true });
     //res.status(200).json({ message: 'Successfully login' });
 
-    // This is real login
+    // Get the user information from the database
     getUserInformation(username).then((result)=>{
+        // If the username does not exist
         if(result.length<1){
             res.status(401).json({message:'Wrong username or password'})
         }
-        else if(result[0].password!==password){
+        else if(result[0].password!==password){ // If the password is wrong
             res.status(401).json({message:"Wrong username or password"})
         }
-        else{
+        else{ // If the username and password are correct
+            // Generate a session id
             const sessionId = Math.random().toString(36).substring(7);
+            // Store the session id in the sessions object
             sessions[sessionId] = { authenticated: true, username: username}
-            // Vox: I will make use of the waitingMatch and match later
+            // Initialize the state of the user
             states[username] = {waitingMatch:false, match:'', game:''}
             // Send the session id to client by cookie
             res.cookie('session_id', sessionId, { maxAge: 60000, secure:true, httpOnly:true });

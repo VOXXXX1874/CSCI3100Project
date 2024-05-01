@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const createANewAccount = require("../controllers/createAccountCtrl")
 
-// A login router for receiving the post request. It is for testing and practicing
+// Just a simple router for testing
 router.post("/",function(req,res,next){
     try{
         createANewAccount(req,res);

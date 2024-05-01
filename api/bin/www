@@ -9,8 +9,11 @@ var debug = require('debug')('api:server');
 var http = require('http');
 // import the cookie libaries to parse the cookie
 var cookie = require('cookie')
+
 // All the sessions is stored in the loginCtrl. Import the session storage.
 var {sessions,states} = require('../controllers/loginCtrl')
+
+// Import relevant functions from the matchCtrl and gameCtrl
 const {startGame,cancelMatch,confirmMatch,refuseMatch} = require('../controllers/matchCtrl')
 const {createGame,placeStone,summaryGame,retractRequest,responseRetractRequest,getOpponent,randomlyPlaceStone} = require('../controllers/gameCtrl')
 
@@ -35,7 +38,8 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-// Vox: add a cookie: ture so that the socket can receive cookie
+// The socket io is for the chat function
+// Add a cookie: ture so that the socket can receive cookie
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -44,6 +48,7 @@ const io = require("socket.io")(server, {
   }
 });
 
+// The match_io is for the matching function
 const match_io = require('socket.io')(server,{
   path: '/Match/',
   cors: {
@@ -52,6 +57,7 @@ const match_io = require('socket.io')(server,{
     credentials: true,
 }})
 
+// The game_io is for the game function
 const game_io = require('socket.io')(server,{
   path: '/Game/',
   cors: {
@@ -63,22 +69,29 @@ const game_io = require('socket.io')(server,{
 // If you encouter problems like socket disconnects before establishing, 
 // you can check and delete the socket.disconnect below for testing.
 
-// Vox: I add some codes to verify the login and authentication of user before the id is joined
+/* This socket is for dealing with chat
+* */
 io.on('connection', (socket) => {
+  // Get the id of the user
   const id = socket.handshake.query.id
   const sessionId = socket.handshake.headers.cookie
     ? cookie.parse(socket.handshake.headers.cookie)['session_id']
     : null;
+
+  // Check if the user is authenticated
   if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
+    // If the user is authenticated, the user will join the room with the id
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to chat socket")
   }
   else{
+    // If the user is not authenticated, the user will be disconnected
     socket.disconnect(true, 'Unauthorized');
     return;
   }
 
+  // When the user send a message, the server will broadcast the message to the recipients
   socket.on('send-message', ({ recipients, text}) => {
     recipients.forEach(recipient => {
       const newRecipients = recipients.filter(r => r !== recipient)
@@ -90,34 +103,55 @@ io.on('connection', (socket) => {
   })
 })
 
-// This socket is for dealing with matching
+/* This socket is for dealing with matching
+* The match socket will handle the matching logic and system
+* */
 
 match_io.on('connection',(socket)=>{
+  // Get the id of the user
   const id = socket.handshake.query.id
   const sessionId = socket.handshake.headers.cookie
     ? cookie.parse(socket.handshake.headers.cookie)['session_id']
     : null;
+
+  /* Check if the user is authenticated
+  * If the user is authenticated, the user will join the room with the id
+  * If the user is not authenticated, the user will be disconnected
+  * */
   if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
+    // If the user is authenticated, the user will join the room with the id
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to match socket")
   }
   else{
+    // If the user is not authenticated, the user will be disconnected
     socket.disconnect(true, 'Unauthorized');
     return;
   }
 
+  /* If the user want to play with a randome placing machine, it will directly
+  * create a game with the machine with the username "machine" and stop the matching
+  * */
   socket.on('play-with-machine',() => {
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive",sessions[sessionId].username," request for machine play")
+
+    // Cancel the match
     cancelMatch(sessions[sessionId].username)
+
+    // Create a game with the machine
     match = {player1:"machine", player2:sessions[sessionId].username}
     console.log("Two player of this match confirm", match)
     createGame(match)
   })
 
+  /* If the user click startGame, he/her will send a request to the server to begin match.
+  * The server will pull the user into the queue and wait for another player.
+  * If the server find another player, the server will send the message to the players for confirmation
+  * */
   socket.on('begin-match', () => {
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
@@ -130,6 +164,7 @@ match_io.on('connection',(socket)=>{
     })
   });
 
+  // If the user click cancelMatch, he/her will send a request to the server to cancel the match.
   socket.on('cancel-match', () => {
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
@@ -137,14 +172,23 @@ match_io.on('connection',(socket)=>{
     cancelMatch(sessions[sessionId].username)
   });
 
+  /* If the user click confirmMatch, he/her will send a request to the server to confirm the match.
+  * The server will check if both players confirm the match, if so, the server will create a game
+  * and send the message to the players
+  * */
   socket.on('player-confirm',({match}) => {
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive",sessions[sessionId].username,"confirm")
+
     confirmMatch(sessions[sessionId].username,match).then((result)=>{
       console.log("Two player of this match confirm", result)
+
+      // Create a game with the two players
       createGame(result)
+
+      // Send the message to the two players
       match_io.to(result.player1).emit('receive-match-result', "accept-white");
       match_io.to(result.player2).emit('receive-match-result', "accept-black");
     }).catch((err)=>{
@@ -152,12 +196,21 @@ match_io.on('connection',(socket)=>{
     })
   })
 
+  /* If the user click refuseMatch, he/her will send a request to the server to refuse the match.
+  * Another player will receive the message that the player refuse the match
+  * The player who refuse the match will be removed from the queue
+  * The player who does not refuse the match will be put back to the queue
+  * */
   socket.on('player-refuse',({match})=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive",sessions[sessionId].username,"refuse")
+
+    // Refuse the match
     refuseMatch(sessions[sessionId].username,match)
+
+    // Send the message to the another player
     if(sessions[sessionId].username==match.player1){
       match_io.to(match.player2).emit('receive-match-result', "refuse");
     }
@@ -167,15 +220,26 @@ match_io.on('connection',(socket)=>{
   })
 })
 
+/**
+ * This socket is for dealing with game
+ * The game socket will handle the game logic
+ * The game socket will also handle the in-game chat
+ */
 game_io.on('connection', (socket) => {
+  // Get the id of the user
   const id = socket.handshake.query.id
   const sessionId = socket.handshake.headers.cookie
     ? cookie.parse(socket.handshake.headers.cookie)['session_id']
     : null;
+
+  // Check if the user is authenticated
   if(sessionId !== null && sessions.hasOwnProperty(sessionId) && sessions[sessionId].authenticated
      && sessions[sessionId].username == id){
+    // If the user is authenticated, the user will join the room with the id
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to game socket")
+
+    // Create a chat for the user
     getOpponent(sessions[sessionId].username).then((opponent)=>{
       console.log('getOpponent inside www')
       console.log(opponent)
@@ -186,29 +250,42 @@ game_io.on('connection', (socket) => {
     console.log("CREATING CHAT FOR", sessions[sessionId].username)
   }
   else{
+    // If the user is not authenticated, the user will be disconnected
     socket.disconnect(true, 'Unauthorized');
     return;
   }
 
+  /**
+   * When the player place a stone, the server will place the stone and send the message to the both player
+   * If the opponent is machine, the server will randomly place a stone
+   */
   socket.on('place-stone',(place)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("receive place stone from", sessions[sessionId].username,"place at",place)
+    // Place the stone
     placeStone(sessions[sessionId].username,place).then(async (result)=>{
+      // Send the message to the player
       game_io.to(sessions[sessionId].username).emit("handle-play",place,result.color)
+
+      // If the opponent is machine, the server will randomly place a stone
       if(result.anotherPlayer==='machine'){
+        // Delay the execution for 1 second
         function delayExecution(ms) {
           return new Promise(resolve => setTimeout(resolve, ms));
         }
         await delayExecution(1000);
+
+        // Randomly place a stone
         randomlyPlaceStone(sessions[sessionId].username).then((machineResult)=>{
           game_io.to(machineResult.anotherPlayer).emit("handle-play",machineResult.place,machineResult.color)
         }).catch((err)=>{
           console.log("Unknow error happen",err)
         })
-      }
+      }  // If the opponent is not machine, the server will send the message to the opponent
       else{
+        // Send the message to the opponent
         game_io.to(result.anotherPlayer).emit("handle-play",place,result.color)
       }
       
@@ -217,11 +294,16 @@ game_io.on('connection', (socket) => {
     })
   })
 
+  /**
+   * When one of player win and leave, the server will summarize and store the game
+   */
   socket.on('summary-game',(winner)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("Player", sessions[sessionId].username, "leave this game")
+
+    // Summarize the game
     summaryGame(sessions[sessionId].username,winner).then((result)=>{
       console.log(result)
     }).catch((error)=>{
@@ -229,16 +311,24 @@ game_io.on('connection', (socket) => {
     })
   })
 
+  /**
+   * When the player raise a retract request, the server will send the message to the opponent
+   * If the opponent is machine, the server will directly agree the retract request
+   * If the opponent is not machine, the server will send the message to the opponent for agreement
+   */
   socket.on('retract-request',()=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("Player", sessions[sessionId].username, "raise retract request")
+
+    // Send the message to the opponent
     retractRequest(sessions[sessionId].username).then((result)=>{
+      // If the opponent is machine, the server will directly agree the retract request
       if(result==='machine'){
         game_io.to(sessions[sessionId].username).emit("end-retract-request",true)
       }
-      else{
+      else{ // If the opponent is not machine, the server will send the message to the opponent for agreement
         game_io.to(result).emit("handle-retract-request")
       }
     }).catch((err)=>{
@@ -246,17 +336,24 @@ game_io.on('connection', (socket) => {
     })
   })
 
+  /**
+   * When the opponent response the retract request, the server will send the message to the player
+   * If the opponent agree the retract request, the server will retract the last move
+   * If the opponent refuse the retract request, the server will send the message to the player
+   */
   socket.on('response-retract-request',(message)=>{
     const sessionId = socket.handshake.headers.cookie
       ? cookie.parse(socket.handshake.headers.cookie)['session_id']
       : null;
     console.log("Player",sessions[sessionId].username,"response with",message? 'confirm':'refuse')
+
+    // Send the response to both players
     responseRetractRequest(sessions[sessionId].username,message).then((result)=>{
-      if(result.result){
+      if(result.result){ // If the opponent agree the retract request, the server will retract the last move
         game_io.to(result.playerWhite).emit("end-retract-request",true)
         game_io.to(result.playerBlack).emit("end-retract-request",true)
       }
-      else{
+      else{ // If the opponent refuse the retract request, the server will announce the result
         game_io.to(result.playerWhite).emit("end-retract-request",false)
         game_io.to(result.playerBlack).emit("end-retract-request",false)
       }

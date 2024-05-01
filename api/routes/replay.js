@@ -3,11 +3,14 @@ var router = express.Router();
 const {sessions} = require('../controllers/loginCtrl')
 const {accessReplays} = require('../controllers/replayCtrl')
 
-// After client click replay past games, request will be posted and some authentication will be performed
+/* Get the replays
+    Input: request to '/replay' with the replay information
+ */
 router.post("/",function(req,res,next){
     try{
         console.log('replay route')
         console.log(req.body)
+        // Pass the request to the controller
         accessReplays(req,res);
         console.log("Replays accessed!")
     }catch(error){

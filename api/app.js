@@ -50,7 +50,7 @@ app.use(session({
   cookie:{secure: true, maxAge:60000,sameSite:'none',httpOnly:true},
 }));
 
-
+// Use the logger, json, urlencoded, cookieParser, and static middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -1,5 +1,8 @@
 const mysql = require('mysql2')
 
+/* Settings for the connection pool
+see createAccountDbCtrl.js for more details
+*/
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'CSCI3100Project',
@@ -11,7 +14,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 })
 
-// Since I will handle all the database part, I will not write comment on it.
+// Just for testing purposes
 async function getTestUserInformation(){
     return new Promise((resolve,reject) => {
         pool.getConnection((err,connection)=>{

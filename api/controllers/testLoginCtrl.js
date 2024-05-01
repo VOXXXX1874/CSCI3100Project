@@ -1,6 +1,6 @@
 const getTestUserInformation = require('./dbControllers/testLoginDbCtrl')
 
-// This controller is called by the router, ask database controller for user information, and send the user information back
+// Just a simple function to send the test user information
 async function sendTestUserInformation(res){
     getTestUserInformation().then((result)=>{
         res.json(result)
