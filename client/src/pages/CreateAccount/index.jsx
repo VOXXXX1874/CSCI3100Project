@@ -2,14 +2,15 @@ import React,{useContext, useState} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
 
-
+/* Pure function react component of the Create Account page */
 export default function CreateAccountPage(){
+    // Get the returnToSignIn function from the PageContext
     const { returnToSignIn } = useContext(PageContext);
+    // Define the state variables for username, password, confirmPassword, and error
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-
 
     //const handleSubmit = (event) => {
     //    event.preventDefault();
@@ -26,10 +27,15 @@ export default function CreateAccountPage(){
     //    returnToSignIn();
     //};
 
-    // Vox: This is my modified create account function
-    // It is disabled by default for convenience
+    /* Function to handle the submit event of the form
+        Input: event
+        Output: none
+        Description: This function will send a POST request to the backend to create an account
+        Once the account is created, it will show a message and redirect to the sign-in page
+    */
     const handleSubmit = (event) => {
         event.preventDefault()
+        // Check if the username, password, and confirm password fulfill the requirements
         if (password !== confirmPassword) {
             setError("Passwords don't match");
             return;
@@ -42,6 +48,7 @@ export default function CreateAccountPage(){
             setError('Username must be at least 3 characters long');
             return;
         }
+        // Send a POST request to the backend to create an account
         fetch('http://localhost:9000/CreateAccount',{
             method: 'POST',
             headers:{
@@ -53,24 +60,35 @@ export default function CreateAccountPage(){
             }),
             credentials: 'include',
         }).then(response=>{
+            // Check the response status
             if (response.status === 200){
+                // If the response status is 200, the account is created successfully
+                // Show a message and redirect to the sign-in page
                 response.json().then(data=>{alert(data.message);})
                 returnToSignIn();
             }
             else{
+                // If the response status is not 200, show the error message
                 response.json().then(data=>{setError(data.message)})
             }
         }).catch(error=>{
+            // If there is an error, show the error message
             setError(error)
             alert('For development, you can directly login without reponse from backend')
             returnToSignIn();
         });
     }
 
+    /* Function to handle the return to sign-in event
+        Input: none
+        Output: none
+        Description: This function will call the returnToSignIn function from the PageContext
+    */
     function handleReturnToSignIn() {
         returnToSignIn();
     }
     
+    // Return the JSX of the Create Account page
     return(
         <div className="creatAccountContainer">
             <h1>Create an account</h1>

@@ -98,6 +98,10 @@ export default function Game({color,startTime}){
   }
 
   function retractRequest(){
+    if (currentMove<=1){
+      alert("You cannot retract now")
+      return;
+    }
     setHasRetraction(true)
     socket.emit('retract-request')
   }
