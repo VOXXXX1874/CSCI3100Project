@@ -20,7 +20,15 @@ var states = {};
 async function verifyLoginInformation(req,res){
     // Read the username and password from the request
     const {username,password} = req.body;
-
+    if(!username || !password){
+        if (Object.getPrototypeOf(req.cookies) !== null){
+            if(sessions.hasOwnProperty(req.cookies.session_id)){
+                console.log(states[sessions[req.cookies.session_id].username])
+                res.status(200).json({ username: sessions[req.cookies.session_id].username, state: states[sessions[req.cookies.session_id].username] });
+                return;
+            }
+        }
+    }
     // For convenience, any username and password will pass the comment out code
     //const sessionId = Math.random().toString(36).substring(7);
     //sessions[sessionId] = { authenticated: true, username: username}

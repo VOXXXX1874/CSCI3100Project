@@ -9,24 +9,39 @@ import { PageContext } from '../appPage/pageContext';
 import React, { useContext, useState } from 'react';
 
 export default function Header() {
-    const { returnToSignIn } = useContext(PageContext);
+    const { returnToSignIn, page } = useContext(PageContext);
     const [fontSize, setFontSize] = useState(16);
     const { manageProfile } = useContext(PageContext);
     const { returnToHome } = useContext(PageContext)
 
     function handleReturnToSignIn() {
+        if(page === 2){
+            alert("Please respect the game and finish it first!")
+            return;
+        }
         returnToSignIn();
     }
 
     function handleFontSizeChange(event) {
+        if (page === 2){
+            return;
+        }
         setFontSize(parseInt(event.target.value));
     }
 
     function handleManageProfile() {
+        if(page === 2){
+            alert("Please respect the game and finish it first!")
+            return;
+        }
         manageProfile();
     }
 
     function handleReturnToHome(){
+        if(page === 2){
+            alert("Please respect the game and finish it first!")
+            return;
+        }
         returnToHome();
     }
 

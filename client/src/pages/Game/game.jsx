@@ -44,7 +44,7 @@ export default function Game({color,startTime}){
   const [xIsNext,setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(361).fill(null)]);
   const [winner,setWinner] = useState(null)
-  const {id,returnToHome,match} = useContext(PageContext)
+  const {id,returnToHome,match,setStates} = useContext(PageContext)
   const [hasRetraction,setHasRetraction] = useState(false)
   const [receiveRetraction, setReceiveRetraction] = useState(false)
   const [currentMove,setCurrentMove] = useState(0);
@@ -85,6 +85,7 @@ export default function Game({color,startTime}){
 
 
   function summaryGame(){
+    setStates({waitingMatch:false,match:'',game:''})
     socket.emit('summary-game',winner)
     returnToHome()
   }

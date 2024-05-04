@@ -54,6 +54,7 @@ var matchedPlayerPool = {};
 */
 async function startGame(username){
     console.log('Receive game start from', username)
+    states[username].waitingMatch = true
     // Return a promise
     return new Promise((resolve,reject)=>{
         if(waitingPlayerPool.hasOwnProperty(username)){ // If the player is already in the pool (for the case that the player cancel the match)
@@ -65,6 +66,10 @@ async function startGame(username){
         }
         // Everytime one player enter the queue, call the function to match two players
         matchTwoPlayers().then((result)=>{
+            states[result.player1].waitingMatch = false
+            states[result.player1].match = result.player1+"vs"+result.player2
+            states[result.player2].waitingMatch = false
+            states[result.player2].match = result.player1+"vs"+result.player2
             resolve(result)
         }).catch((err)=>{
             reject(err)
@@ -83,6 +88,7 @@ async function cancelMatch(username){
     // If the player is in the pool, set the status to 'Canceled'
     // Do not removed the player from queue to reduce the complexity
     if(waitingPlayerPool.hasOwnProperty(username)){
+        states[username].waitingMatch = false
         waitingPlayerPool[username] = 'Canceled'
     }
     console.log('Queue:', waitingPlayerQueue)
@@ -153,6 +159,8 @@ async function confirmMatch(username,match){
             // If both players confirm the match, resolve the promise
             if(matchedPlayerPool[matchId][match.player1] && matchedPlayerPool[matchId][match.player2]){
                 delete matchedPlayerPool[matchId]
+                states[match.player1].match = ''
+                states[match.player2].match = ''
                 resolve(match)
             }
             else{
@@ -178,10 +186,16 @@ async function refuseMatch(username,match){
         if(match.player1==username){
             waitingPlayerQueue.enqueue(match.player2)
             waitingPlayerPool[match.player2] = 'Waiting for matching'
+            states[match.player1].match = ''
+            states[match.player2].match = ''
+            states[match.player2].waitingMatch = true
         }
         else if(match.player2==username){
             waitingPlayerQueue.enqueue(match.player1)
             waitingPlayerPool[match.player1] = 'Waiting for matching'
+            states[match.player1].match = ''
+            states[match.player2].match = ''
+            states[match.player1].waitingMatch = true
         }
     }
 }

@@ -28,23 +28,35 @@ const PagesMap = {
 
 export default function App(){
   // Get the page context through useContext() function. The context is defined in pageContext.jsx
-  const {page,id} = useContext(PageContext);
-  // The apiResponse is just for test. It stores the response from backend.
-  const [apiResponse,setResponse] = useState("");
-  // When the component is rendered, the function is called to fetch testAPI information from backend.
+  const {page,id,login,setStates} = useContext(PageContext);
+
   useEffect(() => {
-    // async function. Try to follow this formula instead of callback hell
-    fetch("http://localhost:9000/testAPI")
-        .then(res => res.text())
-        .then(res => setResponse(res))
-        .catch(err => err);
+    fetch('http://localhost:9000/Login',{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message:'Refresh'
+        }),
+        credentials: 'include',
+    }).then(response=>{
+        if (response.status === 200){
+            response.json().then(data=>{
+                login(data.username)
+                setStates(data.state)
+            })
+        }
+    }).catch(error=>{
+        alert(error);
+    }); 
   },[]);
+
   // Return the corresponding page of page context, which by default is 0:LoginPage, and response of backend
   if (page === 0){
     return(
       <div className="App">
         {PagesMap[page]}
-        <p>{apiResponse}</p>
       </div>
     );
   }

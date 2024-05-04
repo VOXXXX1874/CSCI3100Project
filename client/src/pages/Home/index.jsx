@@ -13,7 +13,7 @@ import StartGameButton from './StartGameButton'
 import Header from '../../components/Header/Header';
 
 export default function HomePage(){
-    const {logout, startGame, modifySettings, pastGame, leaderBoard, id } = useContext(PageContext);
+    const {logout, startGame, modifySettings, pastGame, leaderBoard, id} = useContext(PageContext);
     // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
     function handlePastGame(id){
       fetch('http://localhost:9000/replay',{

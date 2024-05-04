@@ -20,6 +20,9 @@ const PageProvider = ({children}) => {
     // The match of two players
     const [match,setMatch] = useState({});
 
+    // The backend states of the user
+    const [states,setStates] = useState({});
+
     function login(username){
       setId(username);
       setPage(1);
@@ -90,7 +93,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames, score, leaderBoardData,match}}>  
+        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames, score, leaderBoardData, match, states, setStates}}>  
           {children}  
         </PageContext.Provider>  
       );  
