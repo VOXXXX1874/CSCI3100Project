@@ -9,7 +9,6 @@ import { ContactsProvider } from '../../contexts/ContactsProvider';
 import { ConversationsProvider, useConversations } from '../../contexts/ConversationsProvider';
 import OpenConversation from '../../components/OpenConversation';
 import { SocketProvider } from '../../contexts/SocketProvider'
-import { MatchSocketProvider } from '../../contexts/MatchSocketProvider'
 import StartGameButton from './StartGameButton'
 import Header from '../../components/Header/Header';
 
@@ -71,9 +70,6 @@ export default function HomePage(){
       }); 
     }
 
-    // TODO: Pass acutal ID into ConversationsProvider
-    // Vox: I find that the above handle function is not utilized.
-    // Therefore I change all the onsubmit event to the handle function.
     return(
         <div className="HomePage">
           <Header></Header>
@@ -96,9 +92,7 @@ export default function HomePage(){
             //   </SocketProvider> */}
             {/* // <Col> */}
                 <div className="ButtonsContainer">
-                  <MatchSocketProvider id = {id}>
                   <StartGameButton startGame = {startGame}/>
-                  </MatchSocketProvider>
                 <button className="PageButton" onClick={() => handlePastGame(id)}>
                   <div className="ButtonContent">
                   <img src={startGameImage} alt="Start Game" style={{ width: '20vw', height: '260px' }} />

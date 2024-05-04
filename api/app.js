@@ -47,7 +47,7 @@ app.use(session({
   secret: 'default-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie:{secure: true, maxAge:60000,sameSite:'none',httpOnly:true},
+  cookie:{secure: true, maxAge:600000,sameSite:'none',httpOnly:true},
 }));
 
 // Use the logger, json, urlencoded, cookieParser, and static middleware

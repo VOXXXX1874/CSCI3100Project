@@ -94,6 +94,7 @@ export default function Game({color,startTime}){
     if (document.getElementById('audio')){
       document.getElementById('audio').play();
     }
+    console.log("place stone", Math.floor(i/19), i%19)
     socket.emit('place-stone',i)
   }
 
