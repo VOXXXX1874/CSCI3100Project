@@ -22,7 +22,7 @@ export default function StartGameButton({startGame}){
     function playWithMachine(){
       socket.emit('play-with-machine')
       setModalOpen(false)
-      startGame(false)
+      startGame(false,{player1:'You',player2:'Machine'})
       alert("Enjoy your game with a random machine!")
     }
 

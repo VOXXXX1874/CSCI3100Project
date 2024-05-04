@@ -40,6 +40,7 @@ function Square({value,onSquareClick,xIsNext,playerColor}){
 export default function Game({color,startTime}){
   // x stands for black and o stands for white
   const socket = useGameSocket()
+  const [lastRetraction,setLastRetraction] = useState(0)
   const [xIsNext,setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(361).fill(null)]);
   const [winner,setWinner] = useState(null)
@@ -49,6 +50,7 @@ export default function Game({color,startTime}){
   const [currentMove,setCurrentMove] = useState(0);
   const currentSquares = history[currentMove];
   const { createConversation, selectConversationIndex, returnConversationIndex } = useConversations()
+  
 
   useEffect(() => {
     if (socket == null) return
@@ -104,6 +106,11 @@ export default function Game({color,startTime}){
       alert("You cannot retract now")
       return;
     }
+    if (lastRetraction>=currentMove-2){
+      alert("You cannot retract now")
+      return;
+    }
+    setLastRetraction(currentMove+1)
     setHasRetraction(true)
     socket.emit('retract-request')
   }
