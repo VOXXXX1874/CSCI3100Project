@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import "./index.css";
 import { PageContext } from '../../components/appPage/pageContext';
 
@@ -7,34 +7,42 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    // Submit the username and password as json to remote 'http://localhost:9000/Login'
-    // If response status is 200, then store the returned cookie and call login
-    // Otherwise alert the error message
-    const handleSubmit = async(event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        fetch('http://localhost:9000/Login',{
+
+        // Check if username or password is empty
+        if (!username || !password) {
+            alert("Both username and password are required.");
+            return;
+        }
+
+        // Proceed with submitting the credentials
+        fetch('http://localhost:9000/Login', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username:username,
-                password:password,
+                username: username,
+                password: password,
             }),
             credentials: 'include',
-        }).then(response=>{
-            if (response.status === 200){
-                response.json().then(data=>{alert(data.message);})
-                login(username);
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(data => {
+                    alert(data.message);
+                    login(username);
+                });
+            } else {
+                response.json().then(data => {
+                    alert(data.message);
+                });
             }
-            else{
-                response.json().then(data=>{alert(data.message);})
-            }
-        }).catch(error=>{
+        }).catch(error => {
             alert(error);
-            alert('For development, you can directly login without reponse from backend')
-            login(username)
-        }); 
+            alert('For development, you can directly login without response from backend');
+            login(username);
+        });
     }
 
     function handleCreateAccount() {
