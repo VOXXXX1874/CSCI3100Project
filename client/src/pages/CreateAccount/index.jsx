@@ -13,17 +13,41 @@ export default function CreateAccountPage(){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (password !== confirmPassword) {
-            setError("Passwords don't match");
+
+        // Validation for empty fields and matching passwords
+        if (!username || !password || !confirmPassword) {
+            setError("All fields must be filled.");
+            return;
+        } else if (password !== confirmPassword) {
+            setError("Passwords don't match.");
             return;
         }
 
-        console.log('Username:', username);
-        console.log('Password:', password);
-        console.log('Confirm Password:', confirmPassword);
-
-        // Redirect to sign-in page if passwords match
-        returnToSignIn();
+        // Assuming the setup of a backend that can handle the account creation request
+        fetch('http://localhost:9000/CreateAccount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+            credentials: 'include',
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(data => {
+                    alert(data.message);
+                    returnToSignIn();
+                });
+            } else {
+                response.json().then(data => {
+                    setError(data.message);
+                });
+            }
+        }).catch(error => {
+            setError();
+        });
     };
 
     // Vox: This is my modified create account function
