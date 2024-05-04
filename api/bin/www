@@ -189,8 +189,8 @@ match_io.on('connection',(socket)=>{
       createGame(result)
 
       // Send the message to the two players
-      match_io.to(result.player1).emit('receive-match-result', "accept-white");
-      match_io.to(result.player2).emit('receive-match-result', "accept-black");
+      match_io.to(result.player1).emit('receive-match-result', "accept-white",result);
+      match_io.to(result.player2).emit('receive-match-result', "accept-black",result);
     }).catch((err)=>{
       console.log(err)
     })
@@ -238,16 +238,6 @@ game_io.on('connection', (socket) => {
     // If the user is authenticated, the user will join the room with the id
     socket.join(id);
     console.log("User ",sessions[sessionId].username," is connected to game socket")
-
-    // Create a chat for the user
-    getOpponent(sessions[sessionId].username).then((opponent)=>{
-      console.log('getOpponent inside www')
-      console.log(opponent)
-      game_io.to(sessions[sessionId].username).emit('create-game-chat', opponent)
-    }).catch((err)=>{
-      console.log(err)
-    })
-    console.log("CREATING CHAT FOR", sessions[sessionId].username)
   }
   else{
     // If the user is not authenticated, the user will be disconnected

@@ -38,6 +38,7 @@ export default function StartGameButton({startGame}){
     }, [socket])
 
     function confirmMatch(){
+
       setHasConfirm(true)
       socket.emit('player-confirm',{match})
     }
@@ -54,23 +55,23 @@ export default function StartGameButton({startGame}){
     useEffect(() => {
       if (socket == null) return
   
-      socket.on('receive-match-result', (message)=>{
+      socket.on('receive-match-result', (message,result)=>{
         setModalOpen(false)
         setFindMatch(false)
-        setMatch({})
         setHasConfirm(false)
         if(message==='refuse'){
           setModalOpen(true)
           alert("Another player has refused the match. Return to queue")
         }
         else if(message==='accept-white'){
-          startGame(true)
+          startGame(true,result)
           alert("Both players have confirmed! Game start!")
         }
         else if(message==='accept-black'){
-          startGame(false)
+          startGame(false,result)
           alert("Both players have confirmed! Game start!")
         }
+        setMatch({})
       })
   
       return () => socket.off('receive-match-result')

@@ -17,6 +17,9 @@ const PageProvider = ({children}) => {
     // Leader board data
     const [leaderBoardData,setLeaderBoardData] = useState([]);
 
+    // The match of two players
+    const [match,setMatch] = useState({});
+
     function login(username){
       setId(username);
       setPage(1);
@@ -34,7 +37,7 @@ const PageProvider = ({children}) => {
       setPage(0);
     }
 
-    function startGame(color){
+    function startGame(color,match){
       fetch('http://localhost:9000/Score',{
           method: 'POST',
           headers:{
@@ -59,6 +62,8 @@ const PageProvider = ({children}) => {
           alert(error);
       }); 
       setColor(color)
+      setMatch(match)
+      console.log("match ",match.player1,match.player2)
       setPage(2);
     }
 
@@ -85,7 +90,7 @@ const PageProvider = ({children}) => {
     }
 
     return (  
-        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames, score, leaderBoardData}}>  
+        <PageContext.Provider value={{ page, login, logout, returnToSignIn, startGame, modifySettings, pastGame, leaderBoard, createAccount, id , color, returnToHome, manageProfile, pastGames, score, leaderBoardData,match}}>  
           {children}  
         </PageContext.Provider>  
       );  

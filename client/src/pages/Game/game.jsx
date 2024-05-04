@@ -43,7 +43,7 @@ export default function Game({color,startTime}){
   const [xIsNext,setXIsNext] = useState(true);
   const [history,setHistory] = useState([Array(361).fill(null)]);
   const [winner,setWinner] = useState(null)
-  const {returnToHome} = useContext(PageContext)
+  const {id,returnToHome,match} = useContext(PageContext)
   const [hasRetraction,setHasRetraction] = useState(false)
   const [receiveRetraction, setReceiveRetraction] = useState(false)
   const [currentMove,setCurrentMove] = useState(0);
@@ -67,18 +67,19 @@ export default function Game({color,startTime}){
   }, [socket,history,currentMove])
 
   useEffect(() => {
-    if (socket == null) return
-
-    socket.on('create-game-chat', (opponent) =>{
-      console.log(opponent)
-      createConversation([opponent])
-      let conversationIndex = returnConversationIndex(opponent)
-      console.log('conversation index: ', conversationIndex)
-      selectConversationIndex(conversationIndex)
-    })
-
-    return () => socket.off('create-game-chat')
-  }, [socket, createConversation, selectConversationIndex, returnConversationIndex])
+    var opponent = null
+    if (id === match.player1){
+      opponent = match.player2
+    }
+    else{
+      opponent = match.player1
+    }
+    console.log(opponent)
+    createConversation([opponent])
+    let conversationIndex = returnConversationIndex(opponent)
+    console.log('conversation index: ', conversationIndex)
+    selectConversationIndex(conversationIndex)
+  }, [])
 
 
   function summaryGame(){
