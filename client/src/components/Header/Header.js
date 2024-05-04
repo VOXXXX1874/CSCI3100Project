@@ -64,7 +64,7 @@ export default function Header() {
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Brand href="#home" className="me-auto">
-                <img src={homeIcon} alt="Home Icon" onClick={handleReturnToHome} style={{ width: '30px', height: '30px' }} />
+                <img src={homeIcon} alt="Home Icon" onClick={handleReturnToHome} style={{ width: '30px', height: '25px' }} />
             </Navbar.Brand>
             </Container>
             <style>{`
