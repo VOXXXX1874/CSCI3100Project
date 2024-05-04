@@ -2,11 +2,23 @@ import React, { useState, useContext } from 'react';
 import "./index.css";
 import { PageContext } from '../../components/appPage/pageContext';
 
+/* The LoginPage component is used to display the login page
+    The login page contains a form with two input fields for the username and the password
+    The user can enter the username and the password and click the sign in button to log in
+    The user can also click the create an account link to go to the create account page
+*/
 export default function LoginPage() {
+    // Get the page context through useContext() function. The context is defined in pageContext.jsx
     const { login, createAccount } = useContext(PageContext);
+    // Input username and password are stored in the state
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    /* The handleSubmit function is used to handle the submit event of the form
+        The function sends a POST request to the backend with the username and the password
+        If the backend returns a status code of 200, the user is logged in
+        If the backend returns a status code of 400, the user is not logged in
+    */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -45,10 +57,18 @@ export default function LoginPage() {
         });
     }
 
+    /* The handleCreateAccount function is used to handle the click event of the create an account link
+        The function calls the createAccount function to go to the create account page
+    */
     function handleCreateAccount() {
         createAccount();
     }
 
+    /* The return statement contains the JSX code to render the LoginPage component
+        The component contains a header, a form with two input fields for the username and the password, and a sign in button
+        The user can enter the username and the password and click the sign in button to log in
+        The user can also click the create an account link to go to the create account page
+    */
     return (
         <div className="loginContainer">
             <h1>Sign in</h1>

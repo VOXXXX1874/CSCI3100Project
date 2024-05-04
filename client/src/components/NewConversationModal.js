@@ -3,6 +3,11 @@ import { Modal, Form, Button } from 'react-bootstrap'
 import { useContacts } from '../contexts/ContactsProvider'
 import { useConversations } from '../contexts/ConversationsProvider.js'
 
+/* The NewConversationModal component is used to create a new conversation
+    The component takes the closeModal function as a prop to close the modal
+    The component contains a form with checkboxes to select contacts to add to the conversation
+    The component uses the createConversation function from the ConversationsProvider context to create a new conversation
+*/
 export default function NewConversationModal({ closeModal }) {
   const [selectedContactIds, setSelectedContactIds] = useState([])
   const { contacts } = useContacts()

@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { useConversations } from '../contexts/ConversationsProvider';
 import { Form, InputGroup, Button, Container, Row, Col } from 'react-bootstrap'
 
+/* The OpenConversation component is used to display the conversation between the user and the selected recipient.
+    The component takes the selected conversation and the sendMessage function from the ConversationsProvider context.
+    The component contains a form with an input field to send messages to the selected recipient.
+    The component maps over the messages in the selected conversation and displays them in a chat-like format.
+    The component also displays the sender's name for each message.
+    The component uses the sendMessage function to send messages to the selected recipient.
+*/
 export default function OpenConversation() {
     const { selectedConversation, sendMessage } = useConversations();
     const [ text, setText ] = useState('')

@@ -12,10 +12,19 @@ import { SocketProvider } from '../../contexts/SocketProvider'
 import StartGameButton from './StartGameButton'
 import Header from '../../components/Header/Header';
 
+/* The HomePage component is used to display the home page
+    The home page contains a button to start a game, a button to replay past games, and a button to view the leaderboard
+    The user can click on the start game button to start a game
+    The user can click on the replay past games button to view the past games
+    The user can click on the leaderboard button to view the leaderboard
+*/
 export default function HomePage(){
+  // Get the page context through useContext() function. The context is defined in pageContext.jsx
     const {logout, startGame, modifySettings, pastGame, leaderBoard, id} = useContext(PageContext);
+
     // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
     function handlePastGame(id){
+      // Get the past games of the user from the backend
       fetch('http://localhost:9000/replay',{
         method: 'POST',
         headers:{
@@ -27,6 +36,7 @@ export default function HomePage(){
         credentials: 'include',
       }).then(response=>{
         if(response.status === 200){
+          // Jump to the past games page with the past games data
           response.json().then(data=>{pastGame(data.replays)})
         }
         else{
@@ -35,7 +45,9 @@ export default function HomePage(){
       });
     }
 
+    // When the button is clicked, corresponding function will be called and page context is changed to jump to another state
     function handleLeaderBoard(){
+      // Get the leaderboard data from the backend
       fetch('http://localhost:9000/LeaderBoard',{
         method: 'POST',
         headers:{
@@ -45,10 +57,11 @@ export default function HomePage(){
       }).then(response=>{
         if (response.status === 200){
             response.json().then((data)=>{
+              // Jump to the leaderboard page with the leaderboard data
               leaderBoard(data.leaderBoard)
             })
         }
-        else{
+        else{ // If the backend returns a status code of 400, display the error message and set the leaderboard data to default
             response.json().then(data=>{
               alert(data.message);
             })
@@ -70,6 +83,7 @@ export default function HomePage(){
       }); 
     }
 
+    // The return statement contains the JSX code to render the HomePage component
     return(
         <div className="HomePage">
           <Header></Header>

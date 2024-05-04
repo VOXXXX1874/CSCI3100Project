@@ -5,6 +5,7 @@ import Contacts from './Contacts';
 import NewConversationModal from './NewConversationModal';
 import NewContactModal from './NewContactModal';
 
+// *** Abandoned Code ***
 const CONVERSATIONS_KEY = "conversations"
 const CONTACTS_KEY = "contacts"
 

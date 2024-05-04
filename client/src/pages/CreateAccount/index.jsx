@@ -12,21 +12,6 @@ export default function CreateAccountPage(){
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    //const handleSubmit = (event) => {
-    //    event.preventDefault();
-    //    if (password !== confirmPassword) {
-    //        setError("Passwords don't match");
-    //        return;
-    //    }
-//
-    //    console.log('Username:', username);
-    //    console.log('Password:', password);
-    //    console.log('Confirm Password:', confirmPassword);
-//
-    //    // Redirect to sign-in page if passwords match
-    //    returnToSignIn();
-    //};
-
     /* Function to handle the submit event of the form
         Input: event
         Output: none

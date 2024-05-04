@@ -8,6 +8,11 @@ import homeIcon from './home.png'
 import { PageContext } from '../appPage/pageContext';
 import React, { useContext, useState } from 'react';
 
+/* The Header component is used to display the header of the page
+    The header contains the user icon, the settings icon, and the home icon
+    The user can click on the settings icon to change the font size, manage the profile, or logout
+    The user can click on the home icon to return to the home page
+*/
 export default function Header() {
     const { returnToSignIn, page } = useContext(PageContext);
     const [fontSize, setFontSize] = useState(16);

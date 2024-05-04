@@ -12,9 +12,13 @@ export function useSocket() {
 // idenitfy and associate the WebSocket connection with a specific user id. This socket is set to the state
 export function SocketProvider({ id, children }) {
   const [socket, setSocket] = useState()
-  // Vox: Except for the id, I also let the socket send the session of this user.
-  // Session is obtained after login, so only after login the socket can be created.
-  // What's more, the backend can compare the id and res.session.username to ensure security
+  /* The useEffect() hook is used to establish a WebSocket connection with the server when the component is mounted.
+     The WebSocket connection is established using the io() function from the socket.io-client library.
+     The WebSocket connection is established with the server at http://localhost:9000.
+     The id of the user is passed as a query parameter to the server so that the server can identify and associate the WebSocket connection with a specific user id.
+     The WebSocket connection is stored in the state variable socket using the setSocket() function.
+     The useEffect() hook returns a cleanup function that closes the WebSocket connection when the component is unmounted.
+  */
   useEffect(() => {
     try{
       const newSocket = io('http://localhost:9000', 

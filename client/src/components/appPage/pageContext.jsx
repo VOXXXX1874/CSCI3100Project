@@ -5,8 +5,11 @@ const PageContext = createContext();
 
 // Provide the page context and related functions for other component
 const PageProvider = ({children}) => {
+  // The page state
     const [page,setPage] = useState(0);
+    // The id of the user
     const [id, setId] = useState('');
+    // The past games of the user
     const [pastGames, setPastGames] = useState({})
     // black color is false and white color is true
     const [color,setColor] = useState(false);
@@ -40,6 +43,12 @@ const PageProvider = ({children}) => {
       setPage(0);
     }
 
+    /* The startGame function is used to start a game
+        The function takes the color of the player and the match of the two players as arguments
+        The function sends a POST request to the server to get the score of the two players
+        If the server returns a status code of 200, the score of the two players is updated
+        If the server returns a status code of 400, an alert message is displayed
+    */
     function startGame(color,match){
       fetch('http://localhost:9000/Score',{
           method: 'POST',

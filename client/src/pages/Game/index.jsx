@@ -6,9 +6,18 @@ import { ContactsProvider } from '../../contexts/ContactsProvider';
 import { ConversationsProvider } from '../../contexts/ConversationsProvider';
 import Header from '../../components/Header/Header.js'
 
+/* The GamePage component is used to display the game page
+    The game page contains the game component
+    The game component is used to play the game
+*/
 export default function GamePage(){
+  // Get the required page context through useContext() function. The context is defined in pageContext.jsx
   const {id,color,score} = useContext(PageContext);
 
+  /* The return statement contains the JSX code to render the GamePage component
+      The component contains the header, the information about the game, and the game component
+      The game component is used to play the game
+  */
   return(
       <div className="GamePage">
         <Header/>

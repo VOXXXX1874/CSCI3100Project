@@ -21,6 +21,9 @@ async function verifyLoginInformation(req,res){
     // Read the username and password from the request
     const {username,password} = req.body;
     if(!username || !password){
+        console.log(req.body.message)
+        console.log(req.cookies.session_id)
+        console.log(sessions)
         if (Object.getPrototypeOf(req.cookies) !== null){
             if(sessions.hasOwnProperty(req.cookies.session_id)){
                 console.log(states[sessions[req.cookies.session_id].username])
@@ -29,12 +32,6 @@ async function verifyLoginInformation(req,res){
             }
         }
     }
-    // For convenience, any username and password will pass the comment out code
-    //const sessionId = Math.random().toString(36).substring(7);
-    //sessions[sessionId] = { authenticated: true, username: username}
-    //states[username] = {waitingMatch:false, match:'', game:''}
-    //res.cookie('session_id', sessionId, { maxAge: 60000, secure:true, httpOnly:true });
-    //res.status(200).json({ message: 'Successfully login' });
 
     // Get the user information from the database
     getUserInformation(username).then((result)=>{
@@ -53,7 +50,7 @@ async function verifyLoginInformation(req,res){
             // Initialize the state of the user
             states[username] = {waitingMatch:false, match:'', game:''}
             // Send the session id to client by cookie
-            res.cookie('session_id', sessionId, { maxAge: 60000, secure:true, httpOnly:true });
+            res.cookie('session_id', sessionId, { maxAge: 6000000, secure:true, httpOnly:true });
             res.status(200).json({ message: 'Successfully login' });
         }
     }).catch((err)=>{

@@ -8,7 +8,17 @@ import './index.css'
 import LeaderBoardPage from '../LeaderBoard';
 import Table from 'react-bootstrap/Table';
 
+/* The ManageProfilePage component is used to display the profile of the user
+    The profile includes the username and the friends of the user
+    The user can change the username and the password
+    The user can also see the friends of the user
+*/
 export default function ManageProfilePage(){
+    /* The return statement contains the JSX code to render the ManageProfilePage component
+        The component contains a header, a button to change the username, a button to change the password, and a table to display the friends of the user
+        Due to limitation of time, the functionality of changing the username and the password is not implemented
+        It is a static page that only displays the profile of the user
+    */
     return (
         <Router>
             <div className="ManageProfilePage">

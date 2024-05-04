@@ -4,19 +4,29 @@ import { ListGroup, Modal, Button } from 'react-bootstrap';
 import { PageContext } from '../../components/appPage/pageContext';
 import Header from '../../components/Header/Header'; 
 
-export default function PastGamesPage(){// Example leaderboard data
+/* The PastGamesPage component is used to display the past games of the user
+    The past games are stored in the pastGames array in the page context
+    The past games are displayed in a list group
+    When the user clicks on a past game, a modal will pop up to show the details of the game
+    The details include the players, the winner, the start time, the elapsed time, and the final board
+*/
+export default function PastGamesPage(){
+    // Get the page context through useContext() function. The context is defined in pageContext.jsx
     const {id, pastGames } = useContext(PageContext);
+    // The show state is used to control the visibility of the modal
     const [show, setShow] = useState(false);
+    // The modalData state is used to store the data of the game that the user clicked on
     const [modalData, setModalData] = useState({});
-
+    // The handleClose function is used to close the modal
     const handleClose = () => setShow(false);
 
+    // The handleShow function is used to show the modal and set the modalData
     const handleShow = (game) => () => {
         setShow(true);
         setModalData(game);   
     };
         
-
+    // The renderListGroups function is used to render the list group of past games
     const renderListGroups = () => {
         if (pastGames.length > 0) {
             return (
@@ -31,12 +41,16 @@ export default function PastGamesPage(){// Example leaderboard data
             }
     };
 
+    // The Board component is used to display the final board of the game
     function Board({squares}) {
+        // The size of board is 19*19
         const rowsArray = [];
         const width =19;
         const height = 19;
+        // The board is constructed by a 1D array of buttonsArray
         for(let i = 0; i < height; i++){
           const buttonsArray = [];
+          // Each buttons array is one row and contains 19 buttons
           for(let j = 0; j < width; j++){
             buttonsArray.push(
               <Square key = {`button-${j}`} value={squares[i*width+j]} />
@@ -48,7 +62,6 @@ export default function PastGamesPage(){// Example leaderboard data
             </div>
           )
         }
-        
         return (
           <>
           {rowsArray}
@@ -56,7 +69,7 @@ export default function PastGamesPage(){// Example leaderboard data
         );
       }
     
-
+      // The Square component is used to display the tiles on the board
       function Square({value}){
         let SquaresMap = null
       

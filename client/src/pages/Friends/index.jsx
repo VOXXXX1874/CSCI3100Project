@@ -2,6 +2,13 @@ import React,{useState} from 'react';
 import {PageContext} from '../../components/appPage/pageContext'
 import "./index.css"
 
+/* The FriendsPage component is used to display the friends page
+    *** It is not implemented yet ***
+    The friends page contains a table to display the leaderboard data
+    The leaderboard data includes the name and the points of the users
+    The user can click on the Add Friend button to add a friend
+    The friends are stored in the friends state
+*/
 export default function FriendsPage(){// Example leaderboard data
     const leaderboardData = [
         { id: 1, name: 'John', points: 100 },
